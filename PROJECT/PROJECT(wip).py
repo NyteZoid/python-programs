@@ -10,14 +10,14 @@ import mysql.connector as sqlconn
 myconn = sqlconn.connect(
     host = "localhost",
     user = "root",
-    password = "****")
+    password = "1809")
 
 cur = myconn.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
 cur.execute("USE SDBMS;")
 cur.execute("CREATE TABLE IF NOT EXISTS DATA(roll INT PRIMARY KEY, name VARCHAR(30), class INT, section CHAR(1), house VARCHAR(7));")
 
-
+ 
 
 def SearchForm():
     Ser = Toplevel()
@@ -76,7 +76,6 @@ def SearchForm():
         n.set('')
     Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
     
-
 
 
 def UpdateForm():
@@ -165,7 +164,7 @@ def DisplayForm():
     for row in data:
         tree.insert('', 'end', values = row)
 
-    scroll = ttk.Scrollbar(Dis, orient="vertical", command = tree.yview)
+    scroll = ttk.Scrollbar(Dis, orient = "vertical", command = tree.yview)
     tree.configure(yscrollcommand = scroll.set)
     scroll.place(x=660, y=80, height = 331)
 
@@ -337,7 +336,10 @@ def LoginForm():
     T1 = Entry(Myform, fg = "black", bg = "white", textvariable = v1, font = ('bahnschrift semibold', 10)).place(x=202, y=110)
     T2 = Entry(Myform, fg = "black", bg = "white", textvariable = v2, show = "*",font = ('bahnschrift semibold', 10)).place(x=202, y=160)
 
-    Button(Myform, text = "Close", command = Myform.destroy, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
+    def BACK():
+        Myform.destroy()
+        Main()
+    Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
         v1.set('')
@@ -371,13 +373,14 @@ def Main():
         LoginForm()
     Button(Main, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
 
-    Main.mainloop()    
+    Main.mainloop()  
     
 
     
-Main()
+if __name__ == "__main__":
+    Main()
+    myconn.close()
 
-myconn.close()
+
 
 #end
-
