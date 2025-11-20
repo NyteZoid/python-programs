@@ -10,7 +10,7 @@ import mysql.connector as sqlconn
 myconn = sqlconn.connect(
     host = "localhost",
     user = "root",
-    password = "1809")
+    password = "****")
 
 cur = myconn.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
@@ -21,60 +21,76 @@ cur.execute("CREATE TABLE IF NOT EXISTS DATA(roll INT PRIMARY KEY, name VARCHAR(
 
 def SearchForm():
     Ser = Toplevel()
-    Ser.geometry('500x300')
+    Ser.geometry('700x500')
     Ser.configure(bg = 'cornflower blue')
-    Ser.title('Search Record')
+    Ser.title('STUDENT MANAGEMENT SYSTEM')
     Ser.resizable(False, False)
 
-    Label(Ser, text = 'SEARCH RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=90, y=20)
+    Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
-    Label(Ser, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=100)
+    c = StringVar()
     n = StringVar()
-    T1 = Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=340, y=113)
+    T1 = ttk.Combobox(Ser, state = "readonly", textvariable = c, values = ['Roll No', 'Name', 'Class', 'Section', 'House'], width = 11, font = ('bahnschrift semibold', 15)).place(x=165, y=100)
+    T2 = Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 15)).place(x=425, y=100)
 
     def VALIDATE():
-        cur.execute("SELECT roll FROM DATA;")
-        L = cur.fetchall()
-        H = []
-        for x in L:
-            H.append(str(x[0]))
-        if n.get() in H:
-            style = ttk.Style()
-            style.theme_use('clam')
-            style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")
-            style.map('Treeview', background = [('selected', 'cornflower blue')])
+        if c.get() == "Roll No":
+            z = "roll"
+        elif c.get() == "Name":
+            z = "name"
+        elif c.get() == "Class":
+            z = "class"
+        elif c.get() == "Section":
+            z = "section"
+        else:
+            z = "house"
+    
+        style = ttk.Style()
+        style.theme_use('clam')
+        style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")
+        style.map('Treeview', background = [('selected', 'cornflower blue')])
 
-            tree = ttk.Treeview(Ser, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 1)
+        tree = ttk.Treeview(Ser, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 8)
 
-            tree.heading("roll", text = "Roll No")
-            tree.heading("name", text = "Name")
-            tree.heading("class", text = "Class")
-            tree.heading("section", text = "Section")
-            tree.heading("house", text = "House")
+        tree.heading("roll", text = "Roll No")
+        tree.heading("name", text = "Name")
+        tree.heading("class", text = "Class")
+        tree.heading("section", text = "Section")
+        tree.heading("house", text = "House")
 
-            tree.column("roll", anchor = CENTER, width = 70)
-            tree.column("name", anchor = W, width = 145)
-            tree.column("class", anchor = CENTER, width = 70)
-            tree.column("section", anchor = CENTER, width = 70)
-            tree.column("house", anchor = CENTER, width = 95)
+        tree.column("roll", anchor = CENTER, width = 80)
+        tree.column("name", anchor = W, width = 180)
+        tree.column("class", anchor = CENTER, width = 80)
+        tree.column("section", anchor = CENTER, width = 80)
+        tree.column("house", anchor = CENTER, width = 120)
 
-            cur.execute(f"SELECT * FROM DATA WHERE roll = {n.get()};")
-            row = cur.fetchone()
+        if z in ['section','house']:
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")
+        elif z in ['name']:
+            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}' OR {z} LIKE '{n.get()}%' OR {z} LIKE '%{n.get()}%';")
+        else:
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")
+        
+        values = cur.fetchall()
+        for row in values:
             tree.insert('', 'end', values = row)
 
-            tree.place(x=20, y=150)
-        else:
-            messagebox.showinfo("Failed", "Invalid Roll Number")
-    Button(Ser, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+        scroll = ttk.Scrollbar(Ser, orient = "vertical", command = tree.yview)
+        tree.configure(yscrollcommand = scroll.set)
+        scroll.place(x=660, y=160, height = 231)
+
+        tree.place(x=75, y=160)
+
+    Button(Ser, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
 
     def BACK():
         Ser.destroy()
         MenuForm()
-    Button(Ser, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+    Button(Ser, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=190, y=430)
 
     def CLEAR():
         n.set('')
-    Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+    Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=410, y=430)
     
 
 
@@ -82,7 +98,7 @@ def UpdateForm():
     Upd = Toplevel()
     Upd.geometry('500x400')
     Upd.configure(bg = 'cornflower blue')
-    Upd.title('Update Record')
+    Upd.title('STUDENT MANAGEMENT SYSTEM')
     Upd.resizable(False, False)
 
     Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
@@ -135,7 +151,7 @@ def DisplayForm():
     Dis = Toplevel()
     Dis.geometry('700x500')
     Dis.configure(bg = 'cornflower blue')
-    Dis.title('Display Records')
+    Dis.title('STUDENT MANAGEMENT SYSTEM')
     Dis.resizable(False, False)
 
     Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
@@ -182,7 +198,7 @@ def DeleteForm():
     Del = Toplevel()
     Del.geometry('500x300')
     Del.configure(bg = 'cornflower blue')
-    Del.title('Delete Record')
+    Del.title('STUDENT MANAGEMENT SYSTEM')
     Del.resizable(False,False)
 
     Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
@@ -223,7 +239,7 @@ def NewForm():
     New = Toplevel()
     New.geometry('500x500')
     New.configure(bg = 'cornflower blue')
-    New.title('New Record')
+    New.title('STUDENT MANAGEMENT SYSTEM')
     New.resizable(False,False)
 
     Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
@@ -287,7 +303,7 @@ def MenuForm():
     Menu = Toplevel()
     Menu.geometry('500x500')
     Menu.configure(bg = 'cornflower blue')
-    Menu.title('Main Menu')
+    Menu.title('STUDENT MANAGEMENT SYSTEM')
     Menu.resizable(False,False)
 
     Label(Menu, text = 'MAIN MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=140, y=50)
@@ -324,7 +340,7 @@ def LoginForm():
     Myform = Toplevel()
     Myform.geometry('400x300')
     Myform.configure(bg = 'cornflower blue')
-    Myform.title('Login Form')
+    Myform.title('STUDENT MANAGEMENT SYSTEM')
     Myform.resizable(False, False)
 
     Label(Myform, text = 'LOGIN', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
@@ -352,7 +368,6 @@ def LoginForm():
             MenuForm()
         else:
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
-
     Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
     
 
@@ -377,9 +392,8 @@ def Main():
     
 
     
-if __name__ == "__main__":
-    Main()
-    myconn.close()
+Main()
+myconn.close()
 
 
 
