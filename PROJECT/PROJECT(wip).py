@@ -37,7 +37,7 @@ def Main():
     Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
 
     def LOGIN():
-        start.withdraw()
+        start.withdraw()          #hide start window
         LoginForm()
     Button(start, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
 
@@ -68,7 +68,7 @@ def LoginForm():
 
     def BACK():
         Myform.destroy()
-        start.deiconify()
+        start.deiconify()          #show start window again
     Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
@@ -77,7 +77,7 @@ def LoginForm():
     Button(Myform, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=152, y=220)
 
     def VALIDATE():
-        if v1.get() == "abhiraj" and v2.get() == "1809":
+        if v1.get() == "abhiraj" and v2.get() == "1809":          #check for valid credentials
             Myform.destroy()
             MenuForm()
         else:
