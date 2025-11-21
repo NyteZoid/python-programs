@@ -2,11 +2,13 @@
 
 
 
+#imports
 from tkinter import *
 from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
 
 
+#database and table creation
 myconn = sqlconn.connect(
     host = "localhost",
     user = "root",
@@ -19,6 +21,7 @@ cur.execute("CREATE TABLE IF NOT EXISTS DATA(roll INT PRIMARY KEY, name VARCHAR(
 
 
 
+#start window
 def Main():
     global start
     start = Tk()
@@ -27,7 +30,7 @@ def Main():
     start.title('STUDENT MANAGEMENT SYSTEM')
     start.resizable(False, False)
 
-    start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))
+    start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          #to handle window close event
 
     Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
     Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
@@ -38,12 +41,13 @@ def Main():
         LoginForm()
     Button(start, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
 
-    start.bind('<Return>', lambda event: LOGIN())
+    start.bind('<Return>', lambda event: LOGIN())          #bind enter key to login window creation
 
-    start.mainloop()
+    start.mainloop()     
 
 
 
+#login window
 def LoginForm():
     Myform = Toplevel()
     Myform.geometry('400x300')
@@ -80,10 +84,11 @@ def LoginForm():
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
     Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
 
-    Myform.bind('<Return>', lambda event: VALIDATE())
+    Myform.bind('<Return>', lambda event: VALIDATE())          #bind enter key to validate login credentials
 
 
 
+#menu window
 def MenuForm():
     Menu = Toplevel()
     Menu.geometry('400x300')
@@ -101,11 +106,12 @@ def MenuForm():
     Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
     
     def EMENU():
-        messagebox.showinfo("Info", "Exam Menu is under construction.")
+        messagebox.showinfo("Info", "Exam Menu is under construction.")          #placeholder for future exam menu
     Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
 
 
 
+#student menu window
 def StudentMenuForm():
     SMenu = Toplevel()
     SMenu.geometry('500x500')
@@ -133,7 +139,7 @@ def StudentMenuForm():
         SMenu.destroy()
         SearchForm()
     def Exit():
-        confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")
+        confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")          #confirm exit
         if confirm:
             SMenu.destroy()
             start.destroy()
@@ -147,6 +153,7 @@ def StudentMenuForm():
 
 
 
+#new student entry form
 def NewForm():
     New = Toplevel()
     New.geometry('500x500')
@@ -157,14 +164,14 @@ def NewForm():
     New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy()))
 
     Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
-    cur.execute("SELECT MAX(roll) FROM DATA")
-    result = cur.fetchone()
+    cur.execute("SELECT MAX(roll) FROM DATA")          
+    result = cur.fetchone()          #get the maximum roll number to assign next roll number
     if result[0] is None:
         nextroll = 101
     else:
-        nextroll = result[0] + 1
+        nextroll = result[0] + 1          
 
-    rn = StringVar(value = str(nextroll))
+    rn = StringVar(value = str(nextroll))          #set roll number variable to next roll number
     nm = StringVar()
     cl = StringVar()
     sc = StringVar()
@@ -194,7 +201,7 @@ def NewForm():
     Button(New, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
 
     def VALIDATE():
-        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or hs.get() == "":
+        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or hs.get() == "":          #check for empty fields
             messagebox.showinfo("Failed", "Please try again")
         else:
             roll = int(rn.get())
@@ -202,9 +209,9 @@ def NewForm():
             clas = int(cl.get())
             sect = sc.get()
             house = hs.get()
-            sql = "INSERT INTO DATA VALUES (%s,%s,%s,%s,%s);"
+            sql = "INSERT INTO DATA VALUES (%s,%s,%s,%s,%s);"          
             data = (roll,name,clas,sect,house)
-            cur.execute(sql,data)
+            cur.execute(sql,data)          #insert new record into database
             myconn.commit()
             messagebox.showinfo("Success","Record added")
             New.destroy()
@@ -215,6 +222,7 @@ def NewForm():
 
 
 
+#delete student record form
 def DeleteForm():
     Del = Toplevel()
     Del.geometry('500x300')
@@ -240,12 +248,12 @@ def DeleteForm():
 
     def VALIDATE():
         cur.execute("SELECT roll FROM DATA;")
-        L = cur.fetchall()
+        L = cur.fetchall()          
         H = []
         for x in L:
-            H.append(str(x[0]))
-        if n.get() in H:
-            confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")
+            H.append(str(x[0]))          #create list of existing roll numbers
+        if n.get() in H:          #check if roll number exists
+            confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")          #confirm deletion
             if confirm:
                 cur.execute(f"DELETE FROM DATA WHERE roll = {n.get()};")
                 myconn.commit()
@@ -253,13 +261,14 @@ def DeleteForm():
                 Del.destroy()
                 MenuForm()
         else:
-            messagebox.showinfo("Failed", "Invalid Roll Number")
+            messagebox.showinfo("Failed", "Invalid Roll Number")          #invalid roll number message
     Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     Del.bind('<Return>', lambda event: VALIDATE())
 
 
 
+#display student records form
 def DisplayForm():
     Dis = Toplevel()
     Dis.geometry('700x500')
@@ -271,35 +280,35 @@ def DisplayForm():
 
     Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
-    style = ttk.Style()
-    style.theme_use('clam')
-    style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")
-    style.map('Treeview', background = [('selected', 'cornflower blue')])
+    style = ttk.Style()          
+    style.theme_use('clam')          #set theme for treeview
+    style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")          
+    style.map('Treeview', background = [('selected', 'cornflower blue')])          #style for selected row
 
-    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 12)
+    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 12)          #create treeview for displaying records
 
     tree.heading("roll", text = "Roll No")
-    tree.heading("name", text = "Name")
-    tree.heading("class", text = "Class")
+    tree.heading("name", text = "Name")          
+    tree.heading("class", text = "Class")          #set headings for columns
     tree.heading("section", text = "Section")
     tree.heading("house", text = "House")
 
     tree.column("roll", anchor = CENTER, width = 80)
     tree.column("name", anchor = W, width = 180)
-    tree.column("class", anchor = CENTER, width = 80)
+    tree.column("class", anchor = CENTER, width = 80)          #set column properties
     tree.column("section", anchor = CENTER, width = 80)
     tree.column("house", anchor = CENTER, width = 120)
 
     cur.execute("SELECT * FROM DATA;")
     data = cur.fetchall()
     for row in data:
-        tree.insert('', 'end', values = row)
+        tree.insert('', 'end', values = row)          #fetch all records and insert into treeview
 
-    scroll = ttk.Scrollbar(Dis, orient = "vertical", command = tree.yview)
+    scroll = ttk.Scrollbar(Dis, orient = "vertical", command = tree.yview)          #add scrollbar to treeview
     tree.configure(yscrollcommand = scroll.set)
     scroll.place(x=660, y=80, height = 331)
 
-    tree.place(x=75, y=80)
+    tree.place(x=75, y=80)          #place treeview on form
 
     def BACK():
         Dis.destroy()
@@ -308,6 +317,7 @@ def DisplayForm():
 
 
 
+#update student record form
 def UpdateForm():
     Upd = Toplevel()
     Upd.geometry('500x400')
@@ -348,11 +358,11 @@ def UpdateForm():
         H = []
         for x in L:
             H.append(str(x[0]))
-        if n.get() in H:
+        if n.get() in H:          #update record based on column type
             if col.get().lower() in ['name','section','house']:
-                cur.execute(f"UPDATE DATA SET {col.get()} = '{(uv.get())}' WHERE roll = {n.get()};")
+                cur.execute(f"UPDATE DATA SET {col.get()} = '{(uv.get())}' WHERE roll = {n.get()};")          
             else:
-                cur.execute(f"UPDATE DATA SET {col.get()} = {(uv.get())} WHERE roll = {n.get()};")
+                cur.execute(f"UPDATE DATA SET {col.get()} = {(uv.get())} WHERE roll = {n.get()};")          
             myconn.commit()
             messagebox.showinfo("Success", "Record Updated")
             Upd.destroy()
@@ -365,6 +375,7 @@ def UpdateForm():
 
 
 
+#search student record(s) form
 def SearchForm():
     Ser = Toplevel()
     Ser.geometry('700x500')
@@ -383,7 +394,7 @@ def SearchForm():
 
     def VALIDATE():
         if not c.get():
-            messagebox.showinfo("Error", "Please select a search field.")
+            messagebox.showinfo("Error", "Please select a search field.")          
             return
         elif not n.get():
             messagebox.showinfo("Error", "Please enter a value to search.")
@@ -421,19 +432,19 @@ def SearchForm():
 
         if z in ['section','house']:
             if n.get().isalpha() == False:
-                messagebox.showinfo("Error", f"{c.get()} must be a word.")
+                messagebox.showinfo("Error", f"{c.get()} must be a word.")          
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")          #case insensitive search for section and house
         elif z in ['name']:
             if n.get().replace(" ","").isalpha() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a word.")
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}%';")
+            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}%';")          #partial match search for name
         else:
             if n.get().isdigit() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a number.")
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")          #exact match search for roll no and class
         
         values = cur.fetchall()
         for row in values:
@@ -460,8 +471,13 @@ def SearchForm():
 
 
 
+#run start window
 Main()
-myconn.close()
+
+
+
+#close database connection when application ends
+myconn.close()          
 
 
 
