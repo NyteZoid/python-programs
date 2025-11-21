@@ -26,6 +26,8 @@ def SearchForm():
     Ser.title('STUDENT MANAGEMENT SYSTEM')
     Ser.resizable(False, False)
 
+    Ser.protocol("WM_DELETE_WINDOW", lambda: (Ser.destroy(), start.destroy()))
+
     Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
     c = StringVar()
@@ -118,6 +120,8 @@ def UpdateForm():
     Upd.title('STUDENT MANAGEMENT SYSTEM')
     Upd.resizable(False, False)
 
+    Upd.protocol("WM_DELETE_WINDOW", lambda: (Upd.destroy(), start.destroy()))
+
     Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
     Label(Upd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
@@ -171,6 +175,8 @@ def DisplayForm():
     Dis.title('STUDENT MANAGEMENT SYSTEM')
     Dis.resizable(False, False)
 
+    Dis.protocol("WM_DELETE_WINDOW", lambda: (Dis.destroy(), start.destroy()))
+
     Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
     style = ttk.Style()
@@ -218,6 +224,8 @@ def DeleteForm():
     Del.title('STUDENT MANAGEMENT SYSTEM')
     Del.resizable(False,False)
 
+    Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy()))
+
     Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
     Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
     n = StringVar()
@@ -258,6 +266,8 @@ def NewForm():
     New.configure(bg = 'cornflower blue')
     New.title('STUDENT MANAGEMENT SYSTEM')
     New.resizable(False,False)
+
+    New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy()))
 
     Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
     cur.execute("SELECT MAX(roll) FROM DATA")
@@ -323,6 +333,8 @@ def StudentMenuForm():
     SMenu.title('STUDENT MANAGEMENT SYSTEM')
     SMenu.resizable(False,False)
 
+    SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy()))
+
     Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=130, y=50)
 
     def New():
@@ -344,6 +356,7 @@ def StudentMenuForm():
         confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")
         if confirm:
             SMenu.destroy()
+            start.destroy()
 
     Button(SMenu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
     Button(SMenu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
@@ -359,6 +372,8 @@ def MenuForm():
     Menu.configure(bg = 'cornflower blue')
     Menu.title('STUDENT MANAGEMENT SYSTEM')
     Menu.resizable(False, False)
+
+    Menu.protocol("WM_DELETE_WINDOW", lambda: (Menu.destroy(), start.destroy()))
 
     Label(Menu, text = 'MENU', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
 
@@ -380,6 +395,8 @@ def LoginForm():
     Myform.title('STUDENT MANAGEMENT SYSTEM')
     Myform.resizable(False, False)
 
+    Myform.protocol("WM_DELETE_WINDOW", lambda: (Myform.destroy(), start.destroy()))
+
     Label(Myform, text = 'LOGIN', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
     Label(Myform, text = 'User Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=98)
     Label(Myform, text = 'Password', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=148)
@@ -391,7 +408,7 @@ def LoginForm():
 
     def BACK():
         Myform.destroy()
-        Main()
+        start.deiconify()
     Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
@@ -410,22 +427,25 @@ def LoginForm():
 
 
 def Main():
-    Main = Tk()
-    Main.geometry('700x600')
-    Main.configure(bg = 'cornflower blue')
-    Main.title('STUDENT MANAGEMENT SYSTEM')
-    Main.resizable(False, False)
+    global start
+    start = Tk()
+    start.geometry('700x600')
+    start.configure(bg = 'cornflower blue')
+    start.title('STUDENT MANAGEMENT SYSTEM')
+    start.resizable(False, False)
 
-    Label(Main, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
-    Label(Main, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
-    Label(Main, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
+    start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))
+
+    Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
+    Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
+    Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
 
     def LOGIN():
-        Main.destroy()
+        start.withdraw()
         LoginForm()
-    Button(Main, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
+    Button(start, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
 
-    Main.mainloop()  
+    start.mainloop()  
     
 
     
