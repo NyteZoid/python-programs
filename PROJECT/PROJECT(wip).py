@@ -259,7 +259,7 @@ def DeleteForm():
                 myconn.commit()
                 messagebox.showinfo("Success", "Record Deleted")
                 Del.destroy()
-                MenuForm()
+                StudentMenuForm()
         else:
             messagebox.showinfo("Failed", "Invalid Roll Number")          #invalid roll number message
     Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
