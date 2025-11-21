@@ -34,6 +34,13 @@ def SearchForm():
     T2 = Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 15)).place(x=425, y=100)
 
     def VALIDATE():
+        if not c.get():
+            messagebox.showinfo("Error", "Please select a search field.")
+            return
+        elif not n.get():
+            messagebox.showinfo("Error", "Please enter a value to search.")
+            return
+        
         if c.get() == "Roll No":
             z = "roll"
         elif c.get() == "Name":
@@ -65,10 +72,19 @@ def SearchForm():
         tree.column("house", anchor = CENTER, width = 120)
 
         if z in ['section','house']:
+            if n.get().isalpha() == False:
+                messagebox.showinfo("Error", f"{c.get()} must be a word.")
+                return
             cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")
         elif z in ['name']:
-            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}' OR {z} LIKE '{n.get()}%' OR {z} LIKE '%{n.get()}%';")
+            if n.get().replace(" ","").isalpha() == False:
+                messagebox.showinfo("Error", f"{c.get()} must be a word.")
+                return
+            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}%';")
         else:
+            if n.get().isdigit() == False:
+                messagebox.showinfo("Error", f"{c.get()} must be a number.")
+                return
             cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")
         
         values = cur.fetchall()
@@ -90,6 +106,7 @@ def SearchForm():
 
     def CLEAR():
         n.set('')
+        c.set('')
     Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=410, y=430)
     
 
@@ -299,42 +316,62 @@ def NewForm():
 
 
 
-def MenuForm():
-    Menu = Toplevel()
-    Menu.geometry('500x500')
-    Menu.configure(bg = 'cornflower blue')
-    Menu.title('STUDENT MANAGEMENT SYSTEM')
-    Menu.resizable(False,False)
+def StudentMenuForm():
+    SMenu = Toplevel()
+    SMenu.geometry('500x500')
+    SMenu.configure(bg = 'cornflower blue')
+    SMenu.title('STUDENT MANAGEMENT SYSTEM')
+    SMenu.resizable(False,False)
 
-    Label(Menu, text = 'MAIN MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=140, y=50)
+    Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=130, y=50)
 
     def New():
-        Menu.destroy()
+        SMenu.destroy()
         NewForm()
     def Display():
-        Menu.destroy()
+        SMenu.destroy()
         DisplayForm()
     def Update():
-        Menu.destroy()
+        SMenu.destroy()
         UpdateForm()
     def Delete():
-        Menu.destroy()
+        SMenu.destroy()
         DeleteForm()
     def Search():
-        Menu.destroy()
+        SMenu.destroy()
         SearchForm()
     def Exit():
         confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")
         if confirm:
-            Menu.destroy()
+            SMenu.destroy()
 
-    Button(Menu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
-    Button(Menu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
-    Button(Menu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=280)
-    Button(Menu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 18).place(x=290, y=280)
-    Button(Menu, text = "SEARCH", command = Search, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=380)
-    Button(Menu, text = "EXIT", command = Exit, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 35).place(x=290, y=380)
+    Button(SMenu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
+    Button(SMenu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
+    Button(SMenu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=280)
+    Button(SMenu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 18).place(x=290, y=280)
+    Button(SMenu, text = "SEARCH", command = Search, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=380)
+    Button(SMenu, text = "EXIT", command = Exit, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 35).place(x=290, y=380)
     
+
+def MenuForm():
+    Menu = Toplevel()
+    Menu.geometry('400x300')
+    Menu.configure(bg = 'cornflower blue')
+    Menu.title('STUDENT MANAGEMENT SYSTEM')
+    Menu.resizable(False, False)
+
+    Label(Menu, text = 'MENU', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
+
+    def SMENU():
+        Menu.destroy()
+        StudentMenuForm()
+    Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
+    
+    def EMENU():
+        messagebox.showinfo("Info", "Exam Menu is under construction.")
+    Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
+
+
 
 def LoginForm():
     Myform = Toplevel()
