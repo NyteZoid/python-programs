@@ -10,7 +10,7 @@ import mysql.connector as sqlconn
 myconn = sqlconn.connect(
     host = "localhost",
     user = "root",
-    password = "****")
+    password = "1809")
 
 cur = myconn.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
@@ -183,7 +183,7 @@ def NewForm():
 
     def BACK():
         New.destroy()
-        MenuForm()
+        StudentMenuForm()
     Button(New, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=420)
 
     def CLEAR():
@@ -208,7 +208,7 @@ def NewForm():
             myconn.commit()
             messagebox.showinfo("Success","Record added")
             New.destroy()
-            MenuForm()
+            StudentMenuForm()
     Button(New, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
 
     New.bind('<Return>', lambda event: VALIDATE())
@@ -231,7 +231,7 @@ def DeleteForm():
 
     def BACK():
         Del.destroy()
-        MenuForm()
+        StudentMenuForm()
     Button(Del, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
 
     def CLEAR():
@@ -303,7 +303,7 @@ def DisplayForm():
 
     def BACK():
         Dis.destroy()
-        MenuForm()
+        StudentMenuForm()
     Button(Dis, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
 
 
@@ -333,7 +333,7 @@ def UpdateForm():
 
     def BACK():
         Upd.destroy()
-        MenuForm()
+        StudentMenuForm()
     Button(Upd, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=320)
 
     def CLEAR():
@@ -356,7 +356,7 @@ def UpdateForm():
             myconn.commit()
             messagebox.showinfo("Success", "Record Updated")
             Upd.destroy()
-            MenuForm()
+            StudentMenuForm()
         else:
             messagebox.showinfo("Failed", "Invalid Roll Number")
     Button(Upd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
@@ -450,7 +450,7 @@ def SearchForm():
 
     def BACK():
         Ser.destroy()
-        MenuForm()
+        StudentMenuForm()
     Button(Ser, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=190, y=430)
 
     def CLEAR():
