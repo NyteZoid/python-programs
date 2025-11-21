@@ -38,6 +38,8 @@ def Main():
         LoginForm()
     Button(start, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
 
+    start.bind('<Return>', lambda event: LOGIN())
+
     start.mainloop()
 
 
@@ -77,6 +79,8 @@ def LoginForm():
         else:
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
     Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
+
+    Myform.bind('<Return>', lambda event: VALIDATE())
 
 
 
@@ -207,6 +211,8 @@ def NewForm():
             MenuForm()
     Button(New, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
 
+    New.bind('<Return>', lambda event: VALIDATE())
+
 
 
 def DeleteForm():
@@ -249,6 +255,8 @@ def DeleteForm():
         else:
             messagebox.showinfo("Failed", "Invalid Roll Number")
     Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+
+    Del.bind('<Return>', lambda event: VALIDATE())
 
 
 
@@ -296,7 +304,6 @@ def DisplayForm():
     def BACK():
         Dis.destroy()
         MenuForm()
-
     Button(Dis, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
 
 
@@ -353,6 +360,8 @@ def UpdateForm():
         else:
             messagebox.showinfo("Failed", "Invalid Roll Number")
     Button(Upd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
+
+    Upd.bind('<Return>', lambda event: VALIDATE())
 
 
 
@@ -435,8 +444,9 @@ def SearchForm():
         scroll.place(x=660, y=160, height = 231)
 
         tree.place(x=75, y=160)
-
     Button(Ser, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
+
+    Ser.bind('<Return>', lambda event: VALIDATE())
 
     def BACK():
         Ser.destroy()
