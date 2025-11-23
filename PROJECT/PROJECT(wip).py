@@ -17,7 +17,13 @@ myconn = sqlconn.connect(
 cur = myconn.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
 cur.execute("USE SDBMS;")
-cur.execute("CREATE TABLE IF NOT EXISTS DATA(roll INT PRIMARY KEY, name VARCHAR(30), class INT, section CHAR(1), house VARCHAR(7));")
+cur.execute('''CREATE TABLE IF NOT EXISTS DATA(
+                roll INT PRIMARY KEY,
+                name VARCHAR(30),
+                class INT, 
+                section CHAR(1), 
+                house VARCHAR(7)
+            );''')
 
 
 
@@ -29,22 +35,44 @@ def Main():
     start.configure(bg = 'cornflower blue')
     start.title('STUDENT MANAGEMENT SYSTEM')
     start.resizable(False, False)
-
+    
     start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          #to handle window close event
 
     Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
     Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
     Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
 
-    def LOGIN():
-        start.withdraw()          #hide start window
-        LoginForm()
-    Button(start, text = "Start", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=500)
+    def progressbar():
+        def startpb(pb, maxval, start):          #to start progress bar
+            val = pb['value']
+            if val < maxval:
+                pb['value'] = pb['value'] + 1 
+                start.after(10, lambda: startpb(pb, maxval, start))          #increments in progress bar value
+            else:
+                start.withdraw()
+                LoginForm()
 
-    start.bind('<Return>', lambda event: LOGIN())          #bind enter key to login window creation
+        def windowpb():          #to create progress bar window
+            s = ttk.Style()
+            s.theme_use('clam')
+            s.configure("Horizontal.TProgressbar", troughcolor = 'white', background = 'cornflower blue', bordercolor = 'white', lightcolor = 'cornflower blue', darkcolor = 'cornflower blue')          #style for progress bar
+            
+            border_frame = Frame(start, bg='white')          #create border frame for progress bar
+            border_frame.place(x=195, y=495)
+            
+            pb = ttk.Progressbar(border_frame, orient = "horizontal", length = 300, mode = "determinate")          #create progress bar
+            pb.pack(padx=5, pady=5)
 
-    start.mainloop()     
+            maxval = 100
+            pb["maximum"] = maxval
+            start.after(100, lambda: startpb(pb, maxval, start))          #start progress bar updates
+            start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy())) 
 
+        windowpb()
+
+    progressbar()
+    start.mainloop()
+    
 
 
 #login window
@@ -164,12 +192,12 @@ def NewForm():
     New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy()))
 
     Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
-    cur.execute("SELECT MAX(roll) FROM DATA")          
-    result = cur.fetchone()          #get the maximum roll number to assign next roll number
-    if result[0] is None:
-        nextroll = 101
-    else:
-        nextroll = result[0] + 1          
+    try:
+        cur.execute("SELECT max(roll) FROM DATA")          
+        result = cur.fetchone()          #get the max roll number to assign next roll number
+    except:
+        result = (100,)
+    nextroll = result[0] + 1          
 
     rn = StringVar(value = str(nextroll))          #set roll number variable to next roll number
     nm = StringVar()
@@ -471,7 +499,7 @@ def SearchForm():
 
 
 
-#run start window
+#start the application
 Main()
 
 
