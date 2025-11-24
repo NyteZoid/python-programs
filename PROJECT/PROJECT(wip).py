@@ -47,7 +47,7 @@ def Main():
             val = pb['value']
             if val < maxval:
                 pb['value'] = pb['value'] + 1 
-                start.after(10, lambda: startpb(pb, maxval, start))          #increments in progress bar value
+                start.after(20, lambda: startpb(pb, maxval, start))          #increments in progress bar value
             else:
                 start.withdraw()
                 LoginForm()
@@ -510,3 +510,4 @@ myconn.close()
 
 
 #end
+
