@@ -348,11 +348,11 @@ def DisplayForm():
     tree.heading("house", text = "House")
 
     #set column properties
-    tk.tree.column("roll", anchor = tk.CENTER, width = 80)
-    tk.tree.column("name", anchor = tk.W, width = 180)
-    tk.tree.column("class", anchor = tk.CENTER, width = 80)          
-    tk.tree.column("section", anchor = tk.CENTER, width = 80)
-    tk.tree.column("house", anchor = tk.CENTER, width = 120)
+    tree.column("roll", anchor = tk.CENTER, width = 80)
+    tree.column("name", anchor = tk.W, width = 180)
+    tree.column("class", anchor = tk.CENTER, width = 80)          
+    tree.column("section", anchor = tk.CENTER, width = 80)
+    tree.column("house", anchor = tk.CENTER, width = 120)
 
     cur.execute("SELECT * FROM DATA;")
     data = cur.fetchall()
