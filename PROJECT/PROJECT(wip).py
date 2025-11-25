@@ -3,7 +3,7 @@
 
 
 #imports
-from tkinter import *
+import tkinter as tk
 from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
 
@@ -30,7 +30,7 @@ cur.execute('''CREATE TABLE IF NOT EXISTS DATA(
 #start window
 def Main():
     global start
-    start = Tk()
+    start = tk.Tk()
     start.geometry('700x600')
     start.configure(bg = 'cornflower blue')
     start.title('STUDENT MANAGEMENT SYSTEM')
@@ -39,9 +39,9 @@ def Main():
     #to handle window close event
     start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          
 
-    Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
-    Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
-    Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
+    tk.Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
+    tk.Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
+    tk.Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
 
     def progressbar():
         #to start progress bar
@@ -63,7 +63,7 @@ def Main():
             s.configure("Horizontal.TProgressbar", troughcolor = 'white', background = 'cornflower blue', bordercolor = 'white', lightcolor = 'cornflower blue', darkcolor = 'cornflower blue')          
             
             #create border frame for progress bar
-            border_frame = Frame(start, bg='white')          
+            border_frame = tk.Frame(start, bg='white')          
             border_frame.place(x=195, y=495)
             
             #create progress bar
@@ -86,7 +86,7 @@ def Main():
 
 #login window
 def LoginForm():
-    Myform = Toplevel()
+    Myform = tk.Toplevel()
     Myform.geometry('400x300')
     Myform.configure(bg = 'cornflower blue')
     Myform.title('STUDENT MANAGEMENT SYSTEM')
@@ -94,25 +94,25 @@ def LoginForm():
 
     Myform.protocol("WM_DELETE_WINDOW", lambda: (Myform.destroy(), start.destroy()))
 
-    Label(Myform, text = 'LOGIN', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
-    Label(Myform, text = 'User Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=98)
-    Label(Myform, text = 'Password', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=148)
+    tk.Label(Myform, text = 'LOGIN', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
+    tk.Label(Myform, text = 'User Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=98)
+    tk.Label(Myform, text = 'Password', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=148)
 
-    v1 = StringVar()
-    v2 = StringVar()
-    T1 = Entry(Myform, fg = "black", bg = "white", textvariable = v1, font = ('bahnschrift semibold', 10)).place(x=202, y=110)
-    T2 = Entry(Myform, fg = "black", bg = "white", textvariable = v2, show = "*",font = ('bahnschrift semibold', 10)).place(x=202, y=160)
+    v1 = tk.StringVar()
+    v2 = tk.StringVar()
+    T1 = tk.Entry(Myform, fg = "black", bg = "white", textvariable = v1, font = ('bahnschrift semibold', 10)).place(x=202, y=110)
+    T2 = tk.Entry(Myform, fg = "black", bg = "white", textvariable = v2, show = "*",font = ('bahnschrift semibold', 10)).place(x=202, y=160)
 
     def BACK():
         Myform.destroy()
         #show start window again
         start.deiconify()          
-    Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
+    tk.Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
         v1.set('')
         v2.set('')
-    Button(Myform, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=152, y=220)
+    tk.Button(Myform, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=152, y=220)
 
     def VALIDATE():
         #check for valid credentials
@@ -121,7 +121,7 @@ def LoginForm():
             MenuForm()
         else:
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
-    Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
+    tk.Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
 
     #bind enter key to validate login credentials
     Myform.bind('<Return>', lambda event: VALIDATE())          
@@ -130,7 +130,7 @@ def LoginForm():
 
 #menu window
 def MenuForm():
-    Menu = Toplevel()
+    Menu = tk.Toplevel()
     Menu.geometry('400x300')
     Menu.configure(bg = 'cornflower blue')
     Menu.title('STUDENT MANAGEMENT SYSTEM')
@@ -138,23 +138,23 @@ def MenuForm():
 
     Menu.protocol("WM_DELETE_WINDOW", lambda: (Menu.destroy(), start.destroy()))
 
-    Label(Menu, text = 'MENU', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
+    tk.Label(Menu, text = 'MENU', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
 
     def SMENU():
         Menu.destroy()
         StudentMenuForm()
-    Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
+    tk.Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
     
     def EMENU():
         #placeholder for future exam menu
         messagebox.showinfo("Info", "Exam Menu is under construction.")          
-    Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
+    tk.Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
 
 
 
 #student menu window
 def StudentMenuForm():
-    SMenu = Toplevel()
+    SMenu = tk.Toplevel()
     SMenu.geometry('500x500')
     SMenu.configure(bg = 'cornflower blue')
     SMenu.title('STUDENT MANAGEMENT SYSTEM')
@@ -162,7 +162,7 @@ def StudentMenuForm():
 
     SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy()))
 
-    Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=130, y=50)
+    tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=130, y=50)
 
     def New():
         SMenu.destroy()
@@ -186,18 +186,18 @@ def StudentMenuForm():
             SMenu.destroy()
             start.destroy()
 
-    Button(SMenu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
-    Button(SMenu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
-    Button(SMenu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=280)
-    Button(SMenu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 18).place(x=290, y=280)
-    Button(SMenu, text = "SEARCH", command = Search, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=380)
-    Button(SMenu, text = "EXIT", command = Exit, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 35).place(x=290, y=380)
+    tk.Button(SMenu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
+    tk.Button(SMenu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
+    tk.Button(SMenu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=280)
+    tk.Button(SMenu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 18).place(x=290, y=280)
+    tk.Button(SMenu, text = "SEARCH", command = Search, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=380)
+    tk.Button(SMenu, text = "EXIT", command = Exit, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 35).place(x=290, y=380)
 
 
 
 #new student entry form
 def NewForm():
-    New = Toplevel()
+    New = tk.Toplevel()
     New.geometry('500x500')
     New.configure(bg = 'cornflower blue')
     New.title('STUDENT MANAGEMENT SYSTEM')
@@ -205,7 +205,7 @@ def NewForm():
 
     New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy()))
 
-    Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
+    tk.Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
     try:
         #get the max roll number to assign next roll number
         cur.execute("SELECT max(roll) FROM DATA")          
@@ -215,34 +215,34 @@ def NewForm():
     nextroll = result[0] + 1          
 
     #set roll number variable to next roll number
-    rn = StringVar(value = str(nextroll))          
-    nm = StringVar()
-    cl = StringVar()
-    sc = StringVar()
-    hs = StringVar()
+    rn = tk.StringVar(value = str(nextroll))          
+    nm = tk.StringVar()
+    cl = tk.StringVar()
+    sc = tk.StringVar()
+    hs = tk.StringVar()
 
-    Label(New, text='Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
-    T1 = Entry(New, fg = "white", bg = "gray26", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
-    Label(New, text='Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
-    T2 = Entry(New, fg = "black", bg = "white", textvariable = nm, font = ('bahnschrift semibold', 9)).place(x=300, y=180)
-    Label(New, text = 'Class', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
+    tk.Label(New, text='Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
+    T1 = tk.Entry(New, fg = "white", bg = "gray26", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
+    tk.Label(New, text='Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
+    T2 = tk.Entry(New, fg = "black", bg = "white", textvariable = nm, font = ('bahnschrift semibold', 9)).place(x=300, y=180)
+    tk.Label(New, text = 'Class', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
     T3 = ttk.Combobox(New, state = "readonly", textvariable = cl, values = [1,2,3,4,5,6,7,8,9,10,11,12], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=230)
-    Label(New, text = 'Section', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
+    tk.Label(New, text = 'Section', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
     T4 = ttk.Combobox(New, state = "readonly", textvariable = sc, values = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=280)
-    Label(New, text = 'House', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
+    tk.Label(New, text = 'House', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
     T5 = ttk.Combobox(New, state = "readonly", textvariable = hs, values = ["RED","GREEN","BLUE","YELLOW"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
 
     def BACK():
         New.destroy()
         StudentMenuForm()
-    Button(New, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=420)
+    tk.Button(New, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=420)
 
     def CLEAR():
         nm.set('')
         cl.set('')
         sc.set('')
         hs.set('')
-    Button(New, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
+    tk.Button(New, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
 
     def VALIDATE():
         #check for empty fields
@@ -262,7 +262,7 @@ def NewForm():
             messagebox.showinfo("Success","Record added")
             New.destroy()
             StudentMenuForm()
-    Button(New, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
+    tk.Button(New, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
 
     New.bind('<Return>', lambda event: VALIDATE())
 
@@ -270,7 +270,7 @@ def NewForm():
 
 #delete student record form
 def DeleteForm():
-    Del = Toplevel()
+    Del = tk.Toplevel()
     Del.geometry('500x300')
     Del.configure(bg = 'cornflower blue')
     Del.title('STUDENT MANAGEMENT SYSTEM')
@@ -278,19 +278,19 @@ def DeleteForm():
 
     Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy()))
 
-    Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
-    Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
-    n = StringVar()
-    T = Entry(Del, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+    tk.Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    n = tk.StringVar()
+    T = tk.Entry(Del, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
     def BACK():
         Del.destroy()
         StudentMenuForm()
-    Button(Del, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+    tk.Button(Del, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
 
     def CLEAR():
         n.set('')
-    Button(Del, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+    tk.Button(Del, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
 
     def VALIDATE():
         cur.execute("SELECT roll FROM DATA;")
@@ -312,7 +312,7 @@ def DeleteForm():
         else:
             #invalid roll number message
             messagebox.showinfo("Failed", "Invalid Roll Number")          
-    Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+    tk.Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     Del.bind('<Return>', lambda event: VALIDATE())
 
@@ -320,7 +320,7 @@ def DeleteForm():
 
 #display student records form
 def DisplayForm():
-    Dis = Toplevel()
+    Dis = tk.Toplevel()
     Dis.geometry('700x500')
     Dis.configure(bg = 'cornflower blue')
     Dis.title('STUDENT MANAGEMENT SYSTEM')
@@ -328,7 +328,7 @@ def DisplayForm():
 
     Dis.protocol("WM_DELETE_WINDOW", lambda: (Dis.destroy(), start.destroy()))
 
-    Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
+    tk.Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
     style = ttk.Style()    
     #set theme for treeview      
@@ -348,11 +348,11 @@ def DisplayForm():
     tree.heading("house", text = "House")
 
     #set column properties
-    tree.column("roll", anchor = CENTER, width = 80)
-    tree.column("name", anchor = W, width = 180)
-    tree.column("class", anchor = CENTER, width = 80)          
-    tree.column("section", anchor = CENTER, width = 80)
-    tree.column("house", anchor = CENTER, width = 120)
+    tk.tree.column("roll", anchor = tk.CENTER, width = 80)
+    tk.tree.column("name", anchor = tk.W, width = 180)
+    tk.tree.column("class", anchor = tk.CENTER, width = 80)          
+    tk.tree.column("section", anchor = tk.CENTER, width = 80)
+    tk.tree.column("house", anchor = tk.CENTER, width = 120)
 
     cur.execute("SELECT * FROM DATA;")
     data = cur.fetchall()
@@ -371,13 +371,13 @@ def DisplayForm():
     def BACK():
         Dis.destroy()
         StudentMenuForm()
-    Button(Dis, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
+    tk.Button(Dis, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
 
 
 
 #update student record form
 def UpdateForm():
-    Upd = Toplevel()
+    Upd = tk.Toplevel()
     Upd.geometry('500x400')
     Upd.configure(bg = 'cornflower blue')
     Upd.title('STUDENT MANAGEMENT SYSTEM')
@@ -385,30 +385,30 @@ def UpdateForm():
 
     Upd.protocol("WM_DELETE_WINDOW", lambda: (Upd.destroy(), start.destroy()))
 
-    Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+    tk.Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
-    Label(Upd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
-    n = StringVar()
-    T1 = Entry(Upd, fg = "black", bg = "white", textvariable = n, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+    tk.Label(Upd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
+    n = tk.StringVar()
+    T1 = tk.Entry(Upd, fg = "black", bg = "white", textvariable = n, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
-    Label(Upd, text = 'Column', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=180)
-    col = StringVar()
+    tk.Label(Upd, text = 'Column', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=180)
+    col = tk.StringVar()
     T2 = ttk.Combobox(Upd, state = "readonly", textvariable = col, values = ['Name', 'Class', 'Section', 'House'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=193)
 
-    Label(Upd, text = 'New Value', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
-    uv = StringVar()
-    T3 = Entry(Upd, fg = "black", bg = "white", textvariable = uv, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=253)
+    tk.Label(Upd, text = 'New Value', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
+    uv = tk.StringVar()
+    T3 = tk.Entry(Upd, fg = "black", bg = "white", textvariable = uv, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=253)
 
     def BACK():
         Upd.destroy()
         StudentMenuForm()
-    Button(Upd, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=320)
+    tk.Button(Upd, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=320)
 
     def CLEAR():
         n.set('')
         col.set('')
         uv.set('')
-    Button(Upd, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=320)
+    tk.Button(Upd, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=320)
 
     def VALIDATE():
         cur.execute("SELECT roll FROM DATA;")
@@ -428,7 +428,7 @@ def UpdateForm():
             StudentMenuForm()
         else:
             messagebox.showinfo("Failed", "Invalid Roll Number")
-    Button(Upd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
+    tk.Button(Upd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
 
     Upd.bind('<Return>', lambda event: VALIDATE())
 
@@ -436,7 +436,7 @@ def UpdateForm():
 
 #search student record(s) form
 def SearchForm():
-    Ser = Toplevel()
+    Ser = tk.Toplevel()
     Ser.geometry('700x500')
     Ser.configure(bg = 'cornflower blue')
     Ser.title('STUDENT MANAGEMENT SYSTEM')
@@ -444,12 +444,12 @@ def SearchForm():
 
     Ser.protocol("WM_DELETE_WINDOW", lambda: (Ser.destroy(), start.destroy()))
 
-    Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
+    tk.Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
-    c = StringVar()
-    n = StringVar()
+    c = tk.StringVar()
+    n = tk.StringVar()
     T1 = ttk.Combobox(Ser, state = "readonly", textvariable = c, values = ['Roll No', 'Name', 'Class', 'Section', 'House'], width = 11, font = ('bahnschrift semibold', 15)).place(x=165, y=100)
-    T2 = Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 15)).place(x=425, y=100)
+    T2 = tk.Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 15)).place(x=425, y=100)
 
     def VALIDATE():
         if not c.get():
@@ -483,11 +483,11 @@ def SearchForm():
         tree.heading("section", text = "Section")
         tree.heading("house", text = "House")
 
-        tree.column("roll", anchor = CENTER, width = 80)
-        tree.column("name", anchor = W, width = 180)
-        tree.column("class", anchor = CENTER, width = 80)
-        tree.column("section", anchor = CENTER, width = 80)
-        tree.column("house", anchor = CENTER, width = 120)
+        tree.column("roll", anchor = tk.CENTER, width = 80)
+        tree.column("name", anchor = tk.W, width = 180)
+        tree.column("class", anchor = tk.CENTER, width = 80)
+        tree.column("section", anchor = tk.CENTER, width = 80)
+        tree.column("house", anchor = tk.CENTER, width = 120)
 
         if z in ['section','house']:
             if n.get().isalpha() == False:
@@ -517,19 +517,19 @@ def SearchForm():
         scroll.place(x=660, y=160, height = 231)
 
         tree.place(x=75, y=160)
-    Button(Ser, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
+    tk.Button(Ser, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=300, y=430)
 
     Ser.bind('<Return>', lambda event: VALIDATE())
 
     def BACK():
         Ser.destroy()
         StudentMenuForm()
-    Button(Ser, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=190, y=430)
+    tk.Button(Ser, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=190, y=430)
 
     def CLEAR():
         n.set('')
         c.set('')
-    Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=410, y=430)
+    tk.Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=410, y=430)
 
 
 
