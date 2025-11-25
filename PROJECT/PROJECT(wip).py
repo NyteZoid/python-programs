@@ -36,42 +36,51 @@ def Main():
     start.title('STUDENT MANAGEMENT SYSTEM')
     start.resizable(False, False)
     
-    start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          #to handle window close event
+    #to handle window close event
+    start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          
 
     Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
     Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
     Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
 
     def progressbar():
-        def startpb(pb, maxval, start):          #to start progress bar
+        #to start progress bar
+        def startpb(pb, maxval, start):          
             val = pb['value']
             if val < maxval:
                 pb['value'] = pb['value'] + 1 
-                start.after(20, lambda: startpb(pb, maxval, start))          #increments in progress bar value
+                #increments in progress bar value
+                start.after(20, lambda: startpb(pb, maxval, start))          
             else:
                 start.withdraw()
                 LoginForm()
 
-        def windowpb():          #to create progress bar window
+        #to create progress bar window
+        def windowpb():          
             s = ttk.Style()
             s.theme_use('clam')
-            s.configure("Horizontal.TProgressbar", troughcolor = 'white', background = 'cornflower blue', bordercolor = 'white', lightcolor = 'cornflower blue', darkcolor = 'cornflower blue')          #style for progress bar
+            #style for progress bar
+            s.configure("Horizontal.TProgressbar", troughcolor = 'white', background = 'cornflower blue', bordercolor = 'white', lightcolor = 'cornflower blue', darkcolor = 'cornflower blue')          
             
-            border_frame = Frame(start, bg='white')          #create border frame for progress bar
+            #create border frame for progress bar
+            border_frame = Frame(start, bg='white')          
             border_frame.place(x=195, y=495)
             
-            pb = ttk.Progressbar(border_frame, orient = "horizontal", length = 300, mode = "determinate")          #create progress bar
+            #create progress bar
+            pb = ttk.Progressbar(border_frame, orient = "horizontal", length = 300, mode = "determinate")          
             pb.pack(padx=5, pady=5)
 
             maxval = 100
             pb["maximum"] = maxval
-            start.after(100, lambda: startpb(pb, maxval, start))          #start progress bar updates
+            #start progress bar updates
+            start.after(100, lambda: startpb(pb, maxval, start))          
             start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy())) 
 
         windowpb()
 
     progressbar()
-    start.mainloop()
+    #mainloop for start window
+    start.mainloop()          
     
 
 
@@ -96,7 +105,8 @@ def LoginForm():
 
     def BACK():
         Myform.destroy()
-        start.deiconify()          #show start window again
+        #show start window again
+        start.deiconify()          
     Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
@@ -105,14 +115,16 @@ def LoginForm():
     Button(Myform, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=152, y=220)
 
     def VALIDATE():
-        if v1.get() == "abhiraj" and v2.get() == "1809":          #check for valid credentials
+        #check for valid credentials
+        if v1.get() == "abhiraj" and v2.get() == "1809":          
             Myform.destroy()
             MenuForm()
         else:
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
     Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
 
-    Myform.bind('<Return>', lambda event: VALIDATE())          #bind enter key to validate login credentials
+    #bind enter key to validate login credentials
+    Myform.bind('<Return>', lambda event: VALIDATE())          
 
 
 
@@ -134,7 +146,8 @@ def MenuForm():
     Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
     
     def EMENU():
-        messagebox.showinfo("Info", "Exam Menu is under construction.")          #placeholder for future exam menu
+        #placeholder for future exam menu
+        messagebox.showinfo("Info", "Exam Menu is under construction.")          
     Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
 
 
@@ -167,7 +180,8 @@ def StudentMenuForm():
         SMenu.destroy()
         SearchForm()
     def Exit():
-        confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")          #confirm exit
+        #confirm exit
+        confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")          
         if confirm:
             SMenu.destroy()
             start.destroy()
@@ -193,13 +207,15 @@ def NewForm():
 
     Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
     try:
+        #get the max roll number to assign next roll number
         cur.execute("SELECT max(roll) FROM DATA")          
-        result = cur.fetchone()          #get the max roll number to assign next roll number
+        result = cur.fetchone()          
     except:
         result = (100,)
     nextroll = result[0] + 1          
 
-    rn = StringVar(value = str(nextroll))          #set roll number variable to next roll number
+    #set roll number variable to next roll number
+    rn = StringVar(value = str(nextroll))          
     nm = StringVar()
     cl = StringVar()
     sc = StringVar()
@@ -229,7 +245,8 @@ def NewForm():
     Button(New, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
 
     def VALIDATE():
-        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or hs.get() == "":          #check for empty fields
+        #check for empty fields
+        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or hs.get() == "":          
             messagebox.showinfo("Failed", "Please try again")
         else:
             roll = int(rn.get())
@@ -239,7 +256,8 @@ def NewForm():
             house = hs.get()
             sql = "INSERT INTO DATA VALUES (%s,%s,%s,%s,%s);"          
             data = (roll,name,clas,sect,house)
-            cur.execute(sql,data)          #insert new record into database
+            #insert new record into database
+            cur.execute(sql,data)          
             myconn.commit()
             messagebox.showinfo("Success","Record added")
             New.destroy()
@@ -279,9 +297,12 @@ def DeleteForm():
         L = cur.fetchall()          
         H = []
         for x in L:
-            H.append(str(x[0]))          #create list of existing roll numbers
-        if n.get() in H:          #check if roll number exists
-            confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")          #confirm deletion
+            #create list of existing roll numbers
+            H.append(str(x[0]))    
+        #check if roll number exists     
+        if n.get() in H:          
+            #confirm deletion
+            confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")          
             if confirm:
                 cur.execute(f"DELETE FROM DATA WHERE roll = {n.get()};")
                 myconn.commit()
@@ -289,7 +310,8 @@ def DeleteForm():
                 Del.destroy()
                 StudentMenuForm()
         else:
-            messagebox.showinfo("Failed", "Invalid Roll Number")          #invalid roll number message
+            #invalid roll number message
+            messagebox.showinfo("Failed", "Invalid Roll Number")          
     Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     Del.bind('<Return>', lambda event: VALIDATE())
@@ -308,35 +330,43 @@ def DisplayForm():
 
     Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
-    style = ttk.Style()          
-    style.theme_use('clam')          #set theme for treeview
-    style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")          
-    style.map('Treeview', background = [('selected', 'cornflower blue')])          #style for selected row
+    style = ttk.Style()    
+    #set theme for treeview      
+    style.theme_use('clam')          
+    style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")     
+    #style for selected row     
+    style.map('Treeview', background = [('selected', 'cornflower blue')])          
 
-    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 12)          #create treeview for displaying records
+    #create treeview for displaying records
+    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 12)          
 
+    #set headings for columns
     tree.heading("roll", text = "Roll No")
     tree.heading("name", text = "Name")          
-    tree.heading("class", text = "Class")          #set headings for columns
+    tree.heading("class", text = "Class")          
     tree.heading("section", text = "Section")
     tree.heading("house", text = "House")
 
+    #set column properties
     tree.column("roll", anchor = CENTER, width = 80)
     tree.column("name", anchor = W, width = 180)
-    tree.column("class", anchor = CENTER, width = 80)          #set column properties
+    tree.column("class", anchor = CENTER, width = 80)          
     tree.column("section", anchor = CENTER, width = 80)
     tree.column("house", anchor = CENTER, width = 120)
 
     cur.execute("SELECT * FROM DATA;")
     data = cur.fetchall()
     for row in data:
-        tree.insert('', 'end', values = row)          #fetch all records and insert into treeview
+        #fetch all records and insert into treeview
+        tree.insert('', 'end', values = row)          
 
-    scroll = ttk.Scrollbar(Dis, orient = "vertical", command = tree.yview)          #add scrollbar to treeview
+    #add scrollbar to treeview
+    scroll = ttk.Scrollbar(Dis, orient = "vertical", command = tree.yview)          
     tree.configure(yscrollcommand = scroll.set)
     scroll.place(x=660, y=80, height = 331)
 
-    tree.place(x=75, y=80)          #place treeview on form
+    #place treeview on form
+    tree.place(x=75, y=80)          
 
     def BACK():
         Dis.destroy()
@@ -386,7 +416,8 @@ def UpdateForm():
         H = []
         for x in L:
             H.append(str(x[0]))
-        if n.get() in H:          #update record based on column type
+        #update record based on column type
+        if n.get() in H:          
             if col.get().lower() in ['name','section','house']:
                 cur.execute(f"UPDATE DATA SET {col.get()} = '{(uv.get())}' WHERE roll = {n.get()};")          
             else:
@@ -462,17 +493,20 @@ def SearchForm():
             if n.get().isalpha() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a word.")          
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")          #case insensitive search for section and house
+            #case insensitive search for section and house
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")         
         elif z in ['name']:
             if n.get().replace(" ","").isalpha() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a word.")
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}%';")          #partial match search for name
+            #partial match search for name
+            cur.execute(f"SELECT * FROM DATA WHERE {z} LIKE '%{n.get()}%';")          
         else:
             if n.get().isdigit() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a number.")
                 return
-            cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")          #exact match search for roll no and class
+            #exact match search for roll no and class
+            cur.execute(f"SELECT * FROM DATA WHERE {z} = {n.get()};")          
         
         values = cur.fetchall()
         for row in values:
@@ -510,4 +544,3 @@ myconn.close()
 
 
 #end
-
