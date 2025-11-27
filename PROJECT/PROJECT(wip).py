@@ -17,15 +17,42 @@ myconn = sqlconn.connect(
 cur = myconn.cursor()
 cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
 cur.execute("USE SDBMS;")
+
+#create student data table
 cur.execute('''CREATE TABLE IF NOT EXISTS DATA(
                 roll INT PRIMARY KEY,
                 name VARCHAR(30),
                 class INT, 
                 section CHAR(1), 
-                house VARCHAR(7)
+                gender VARCHAR(6)
             );''')
 
+#create subjects table
+cur.execute('''CREATE TABLE IF NOT EXISTS SUBJECTS(
+                roll INT PRIMARY KEY,
+                subject1 VARCHAR(20),
+                subject2 VARCHAR(20),
+                subject3 VARCHAR(20),
+                subject4 VARCHAR(20),
+                subject5 VARCHAR(20)
+            );''')
 
+#create marks table
+cur.execute('''CREATE TABLE IF NOT EXISTS MARKS(
+                roll INT,
+                exam VARCHAR(20),
+                sub1 INT,
+                sub2 INT,
+                sub3 INT,
+                sub4 INT,
+                sub5 INT,
+                PRIMARY KEY(roll, exam)
+            );''')
+
+#list of available subjects
+subjects = ['Accountancy', 'Applied Maths', 'Biology', 'Business Studies', 'Chemistry', 'Computer Science', 'Dance', 
+            'Economics', 'English', 'Fine Arts', 'French', 'Geography', 'Hindi', 'History', 'Legal Studies', 'Mathematics', 
+            'Music', 'PE', 'Physics', 'Pol Science', 'Psychology', 'Science', 'Social Science', 'Taxation']
 
 #start window
 def Main():
@@ -50,7 +77,7 @@ def Main():
             if val < maxval:
                 pb['value'] = pb['value'] + 1 
                 #increments in progress bar value
-                start.after(20, lambda: startpb(pb, maxval, start))          
+                start.after(15, lambda: startpb(pb, maxval, start))          
             else:
                 start.withdraw()
                 LoginForm()
@@ -121,6 +148,8 @@ def LoginForm():
             MenuForm()
         else:
             messagebox.showinfo("Access Denied", "Invalid Username or Password")
+            v1.set('')
+            v2.set('')
     tk.Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
 
     #bind enter key to validate login credentials
@@ -146,8 +175,8 @@ def MenuForm():
     tk.Button(Menu, text = "Manage Students", command = SMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=100, y=115)
     
     def EMENU():
-        #placeholder for future exam menu
-        messagebox.showinfo("Info", "Exam Menu is under construction.")          
+        Menu.destroy()
+        ExamMenuForm()        
     tk.Button(Menu, text = "Manage Marks", command = EMENU, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 26).place(x=100, y=200)
 
 
@@ -162,7 +191,7 @@ def StudentMenuForm():
 
     SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy()))
 
-    tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=130, y=50)
+    tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=115, y=50)
 
     def New():
         SMenu.destroy()
@@ -179,19 +208,16 @@ def StudentMenuForm():
     def Search():
         SMenu.destroy()
         SearchForm()
-    def Exit():
-        #confirm exit
-        confirm = messagebox.askyesno("Exit", "Are you sure you want to exit?")          
-        if confirm:
+    def Back():
             SMenu.destroy()
-            start.destroy()
+            MenuForm()
 
     tk.Button(SMenu, text = "NEW", command = New, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 30).place(x=90, y=180)
     tk.Button(SMenu, text = "DISPLAY", command = Display, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=290, y=180)
     tk.Button(SMenu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=280)
     tk.Button(SMenu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 18).place(x=290, y=280)
     tk.Button(SMenu, text = "SEARCH", command = Search, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=90, y=380)
-    tk.Button(SMenu, text = "EXIT", command = Exit, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 35).place(x=290, y=380)
+    tk.Button(SMenu, text = "BACK", command = Back, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 28).place(x=290, y=380)
 
 
 
@@ -219,18 +245,18 @@ def NewForm():
     nm = tk.StringVar()
     cl = tk.StringVar()
     sc = tk.StringVar()
-    hs = tk.StringVar()
+    gn = tk.StringVar()
 
-    tk.Label(New, text='Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
-    T1 = tk.Entry(New, fg = "white", bg = "gray26", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
-    tk.Label(New, text='Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
+    tk.Label(New, text='Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
+    T1 = tk.Entry(New, fg = "black", bg = "gray67", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
+    tk.Label(New, text='Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
     T2 = tk.Entry(New, fg = "black", bg = "white", textvariable = nm, font = ('bahnschrift semibold', 9)).place(x=300, y=180)
-    tk.Label(New, text = 'Class', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
+    tk.Label(New, text = 'Class', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
     T3 = ttk.Combobox(New, state = "readonly", textvariable = cl, values = [1,2,3,4,5,6,7,8,9,10,11,12], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=230)
-    tk.Label(New, text = 'Section', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
+    tk.Label(New, text = 'Section', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
     T4 = ttk.Combobox(New, state = "readonly", textvariable = sc, values = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=280)
-    tk.Label(New, text = 'House', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
-    T5 = ttk.Combobox(New, state = "readonly", textvariable = hs, values = ["RED","GREEN","BLUE","YELLOW"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
+    tk.Label(New, text = 'Gender', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
+    T5 = ttk.Combobox(New, state = "readonly", textvariable = gn, values = ["MALE", "FEMALE", "OTHER"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
 
     def BACK():
         New.destroy()
@@ -241,21 +267,21 @@ def NewForm():
         nm.set('')
         cl.set('')
         sc.set('')
-        hs.set('')
+        gn.set('')
     tk.Button(New, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
 
     def VALIDATE():
         #check for empty fields
-        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or hs.get() == "":          
-            messagebox.showinfo("Failed", "Please try again")
+        if rn.get() == "" or nm.get() == "" or cl.get() == "" or sc.get() == "" or gn.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
         else:
             roll = int(rn.get())
             name =  nm.get()
             clas = int(cl.get())
             sect = sc.get()
-            house = hs.get()
+            gend = gn.get()
             sql = "INSERT INTO DATA VALUES (%s,%s,%s,%s,%s);"          
-            data = (roll,name,clas,sect,house)
+            data = (roll,name,clas,sect,gend)
             #insert new record into database
             cur.execute(sql,data)          
             myconn.commit()
@@ -293,25 +319,29 @@ def DeleteForm():
     tk.Button(Del, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
 
     def VALIDATE():
-        cur.execute("SELECT roll FROM DATA;")
-        L = cur.fetchall()          
-        H = []
-        for x in L:
-            #create list of existing roll numbers
-            H.append(str(x[0]))    
-        #check if roll number exists     
-        if n.get() in H:          
-            #confirm deletion
-            confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")          
-            if confirm:
-                cur.execute(f"DELETE FROM DATA WHERE roll = {n.get()};")
-                myconn.commit()
-                messagebox.showinfo("Success", "Record Deleted")
-                Del.destroy()
-                StudentMenuForm()
+        #check for empty fields
+        if n.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
         else:
-            #invalid roll number message
-            messagebox.showinfo("Failed", "Invalid Roll Number")          
+            cur.execute("SELECT roll FROM DATA;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if n.get() in H:          
+                #confirm deletion
+                confirm = messagebox.askyesno("Confirm Delete", f"Delete record with Roll No {n.get()}?")          
+                if confirm:
+                    cur.execute(f"DELETE FROM DATA WHERE roll = {n.get()};")
+                    myconn.commit()
+                    messagebox.showinfo("Success", "Record Deleted")
+                    Del.destroy()
+                    StudentMenuForm()
+            else:
+                #invalid roll number message
+                messagebox.showinfo("Failed", "Invalid Roll Number")          
     tk.Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     Del.bind('<Return>', lambda event: VALIDATE())
@@ -338,21 +368,21 @@ def DisplayForm():
     style.map('Treeview', background = [('selected', 'cornflower blue')])          
 
     #create treeview for displaying records
-    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 12)          
+    tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "gender"), show = 'headings', height = 12)          
 
     #set headings for columns
     tree.heading("roll", text = "Roll No")
     tree.heading("name", text = "Name")          
     tree.heading("class", text = "Class")          
     tree.heading("section", text = "Section")
-    tree.heading("house", text = "House")
+    tree.heading("gender", text = "Gender")
 
     #set column properties
     tree.column("roll", anchor = tk.CENTER, width = 80)
     tree.column("name", anchor = tk.W, width = 180)
     tree.column("class", anchor = tk.CENTER, width = 80)          
     tree.column("section", anchor = tk.CENTER, width = 80)
-    tree.column("house", anchor = tk.CENTER, width = 120)
+    tree.column("gender", anchor = tk.CENTER, width = 120)
 
     cur.execute("SELECT * FROM DATA;")
     data = cur.fetchall()
@@ -393,7 +423,7 @@ def UpdateForm():
 
     tk.Label(Upd, text = 'Column', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=180)
     col = tk.StringVar()
-    T2 = ttk.Combobox(Upd, state = "readonly", textvariable = col, values = ['Name', 'Class', 'Section', 'House'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=193)
+    T2 = ttk.Combobox(Upd, state = "readonly", textvariable = col, values = ['Name', 'Class', 'Section', 'Gender'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=193)
 
     tk.Label(Upd, text = 'New Value', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
     uv = tk.StringVar()
@@ -411,23 +441,27 @@ def UpdateForm():
     tk.Button(Upd, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=320)
 
     def VALIDATE():
-        cur.execute("SELECT roll FROM DATA;")
-        L = cur.fetchall()
-        H = []
-        for x in L:
-            H.append(str(x[0]))
-        #update record based on column type
-        if n.get() in H:          
-            if col.get().lower() in ['name','section','house']:
-                cur.execute(f"UPDATE DATA SET {col.get()} = '{(uv.get())}' WHERE roll = {n.get()};")          
-            else:
-                cur.execute(f"UPDATE DATA SET {col.get()} = {(uv.get())} WHERE roll = {n.get()};")          
-            myconn.commit()
-            messagebox.showinfo("Success", "Record Updated")
-            Upd.destroy()
-            StudentMenuForm()
+        #check for empty fields
+        if n.get() == "" or col.get() == "" or uv.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
         else:
-            messagebox.showinfo("Failed", "Invalid Roll Number")
+            cur.execute("SELECT roll FROM DATA;")
+            L = cur.fetchall()
+            H = []
+            for x in L:
+                H.append(str(x[0]))
+            #update record based on column type
+            if n.get() in H:          
+                if col.get().lower() in ['name','section','gender']:
+                    cur.execute(f"UPDATE DATA SET {col.get()} = '{(uv.get())}' WHERE roll = {n.get()};")          
+                else:
+                    cur.execute(f"UPDATE DATA SET {col.get()} = {(uv.get())} WHERE roll = {n.get()};")          
+                myconn.commit()
+                messagebox.showinfo("Success", "Record Updated")
+                Upd.destroy()
+                StudentMenuForm()
+            else:
+                messagebox.showinfo("Failed", "Invalid Roll Number")
     tk.Button(Upd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
 
     Upd.bind('<Return>', lambda event: VALIDATE())
@@ -448,7 +482,7 @@ def SearchForm():
 
     c = tk.StringVar()
     n = tk.StringVar()
-    T1 = ttk.Combobox(Ser, state = "readonly", textvariable = c, values = ['Roll No', 'Name', 'Class', 'Section', 'House'], width = 11, font = ('bahnschrift semibold', 15)).place(x=165, y=100)
+    T1 = ttk.Combobox(Ser, state = "readonly", textvariable = c, values = ['Roll No', 'Name', 'Class', 'Section', 'Gender'], width = 11, font = ('bahnschrift semibold', 15)).place(x=165, y=100)
     T2 = tk.Entry(Ser, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 15)).place(x=425, y=100)
 
     def VALIDATE():
@@ -467,33 +501,34 @@ def SearchForm():
             z = "class"
         elif c.get() == "Section":
             z = "section"
-        else:
-            z = "house"
+        elif c.get() == "Gender":
+            z = "gender"
     
         style = ttk.Style()
         style.theme_use('clam')
         style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")
         style.map('Treeview', background = [('selected', 'cornflower blue')])
 
-        tree = ttk.Treeview(Ser, columns = ("roll", "name", "class", "section", "house"), show = 'headings', height = 8)
-
+        global tree
+        tree = ttk.Treeview(Ser, columns = ("roll", "name", "class", "section", "gender"), show = 'headings', height = 8)
+        
         tree.heading("roll", text = "Roll No")
         tree.heading("name", text = "Name")
         tree.heading("class", text = "Class")
         tree.heading("section", text = "Section")
-        tree.heading("house", text = "House")
+        tree.heading("gender", text = "Gender")
 
         tree.column("roll", anchor = tk.CENTER, width = 80)
         tree.column("name", anchor = tk.W, width = 180)
         tree.column("class", anchor = tk.CENTER, width = 80)
         tree.column("section", anchor = tk.CENTER, width = 80)
-        tree.column("house", anchor = tk.CENTER, width = 120)
+        tree.column("gender", anchor = tk.CENTER, width = 120)
 
-        if z in ['section','house']:
+        if z in ['section','gender']:
             if n.get().isalpha() == False:
                 messagebox.showinfo("Error", f"{c.get()} must be a word.")          
                 return
-            #case insensitive search for section and house
+            #case insensitive search for section and gender
             cur.execute(f"SELECT * FROM DATA WHERE {z} = '{n.get().upper()}';")         
         elif z in ['name']:
             if n.get().replace(" ","").isalpha() == False:
@@ -529,7 +564,405 @@ def SearchForm():
     def CLEAR():
         n.set('')
         c.set('')
+        tree.destroy()
     tk.Button(Ser, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=410, y=430)
+
+
+
+#exam menu window
+def ExamMenuForm():
+    EMenu = tk.Toplevel()
+    EMenu.geometry('500x600')
+    EMenu.configure(bg = 'cornflower blue')
+    EMenu.title('STUDENT MANAGEMENT SYSTEM')
+    EMenu.resizable(False,False)
+
+    EMenu.protocol("WM_DELETE_WINDOW", lambda: (EMenu.destroy(), start.destroy()))
+
+    tk.Label(EMenu, text = 'EXAM MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=135, y=50)
+
+    def Subjects():
+        EMenu.destroy()
+        ExamSubjectsForm()
+    def Marks():
+        EMenu.destroy()
+        ExamMarksForm()
+    def Update():
+        EMenu.destroy()
+        ExamUpdateForm()
+    def Delete():
+        EMenu.destroy()
+        ExamDeleteForm()
+    def Graph():
+        EMenu.destroy()
+        ExamGraphForm()
+    def Predict():
+        EMenu.destroy()
+        ExamPredictForm()
+    def Report():
+        EMenu.destroy()
+        ExamReportForm()
+    def Back():
+        EMenu.destroy()
+        MenuForm()
+
+    tk.Button(EMenu, text = "SUBJECTS", command = Subjects, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 10).place(x=90, y=180)
+    tk.Button(EMenu, text = "MARKS", command = Marks, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 21).place(x=290, y=180)
+    tk.Button(EMenu, text = "UPDATE", command = Update, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 19).place(x=90, y=280)
+    tk.Button(EMenu, text = "DELETE", command = Delete, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 20).place(x=290, y=280)
+    tk.Button(EMenu, text = "GRAPH", command = Graph, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 22).place(x=90, y=380)
+    tk.Button(EMenu, text = "PREDICT", command = Predict, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 16).place(x=290, y=380)
+    tk.Button(EMenu, text = "REPORT", command = Report, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 19).place(x=90, y=480)
+    tk.Button(EMenu, text = "BACK", command = Back, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 28).place(x=290, y=480)
+
+
+
+#exam subjects assignment form
+def ExamSubjectsForm():
+    ESub = tk.Toplevel()
+    ESub.geometry('500x500')
+    ESub.configure(bg = 'cornflower blue')
+    ESub.title('STUDENT MANAGEMENT SYSTEM')
+    ESub.resizable(False,False)
+
+    ESub.protocol("WM_DELETE_WINDOW", lambda: (ESub.destroy(), start.destroy()))
+
+    tk.Label(ESub, text = 'ASSIGN SUBJECTS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=90, y=20)      
+
+    rn = tk.StringVar()  
+    s1 = tk.StringVar()
+    s2 = tk.StringVar()
+    s3 = tk.StringVar()
+    s4 = tk.StringVar()
+    s5 = tk.StringVar()
+
+    tk.Label(ESub, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=110)
+    T1 = tk.Entry(ESub, fg = "black", bg = "white", textvariable = rn, font = ('bahnschrift semibold', 9)).place(x=300, y=120)
+    
+    tk.Label(ESub, text = 'Subject 1', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=153)
+    T2 = ttk.Combobox(ESub, state = "readonly", textvariable = s1, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=163)
+    
+    tk.Label(ESub, text = 'Subject 2', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=196)
+    T3 = ttk.Combobox(ESub, state = "readonly", textvariable = s2, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=206)
+    
+    tk.Label(ESub, text = 'Subject 3', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=239)
+    T4 = ttk.Combobox(ESub, state = "readonly", textvariable = s3, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=249)
+    
+    tk.Label(ESub, text = 'Subject 4', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=282)
+    T5 = ttk.Combobox(ESub, state = "readonly", textvariable = s4, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=292)
+    
+    tk.Label(ESub, text = 'Subject 5', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=325)
+    T6 = ttk.Combobox(ESub, state = "readonly", textvariable = s5, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=335)
+
+    def BACK():
+        ESub.destroy()
+        ExamMenuForm()
+    tk.Button(ESub, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=420)
+
+    def CLEAR():
+        rn.set('')
+        s1.set('')
+        s2.set('')
+        s3.set('')
+        s4.set('')
+        s5.set('')
+    tk.Button(ESub, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
+
+    def VALIDATE():
+        #check for empty fields
+        if rn.get() == "" or s1.get() == "" or s2.get() == "" or s3.get() == "" or s4.get() == "" or s5.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM DATA;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if rn.get() in H:
+                cur.execute("SELECT * FROM SUBJECTS WHERE roll = %s;", (int(rn.get()),))
+                exist = cur.fetchone()
+                if exist:
+                    messagebox.showinfo("Failed", "Subjects already assigned for this student")
+                    rn.set('')
+                    s1.set('')
+                    s2.set('')
+                    s3.set('')
+                    s4.set('')
+                    s5.set('')
+                else:
+                    roll = int(rn.get())
+                    subject1 = s1.get()
+                    subject2 = s2.get()
+                    subject3 = s3.get()
+                    subject4 = s4.get()
+                    subject5 = s5.get()
+                    sql = "INSERT INTO SUBJECTS VALUES(%s,%s,%s,%s,%s,%s);"          
+                    data = (roll,subject1,subject2,subject3,subject4,subject5)
+                    #insert new record into database
+                    cur.execute(sql,data)          
+                    myconn.commit()
+                    messagebox.showinfo("Success","Subjects assigned")
+                    ESub.destroy()
+                    StudentMenuForm()
+            else:
+                messagebox.showinfo("Failed", "Invalid Roll Number")
+    tk.Button(ESub, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
+
+    ESub.bind('<Return>', lambda event: VALIDATE())
+
+
+
+#exam marks entry form
+def ExamMarksForm():
+    EMarks = tk.Toplevel()
+    EMarks.geometry('500x500')
+    EMarks.configure(bg = 'cornflower blue')
+    EMarks.title('STUDENT MANAGEMENT SYSTEM')
+    EMarks.resizable(False,False)
+
+    EMarks.protocol("WM_DELETE_WINDOW", lambda: (EMarks.destroy(), start.destroy()))
+
+    tk.Label(EMarks, text = 'INSERT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=110, y=20)      
+
+    rn = tk.StringVar()  
+    ex = tk.StringVar()
+    m1 = tk.StringVar()
+    m2 = tk.StringVar()
+    m3 = tk.StringVar()
+    m4 = tk.StringVar()
+    m5 = tk.StringVar()
+
+    tk.Label(EMarks, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=105)
+    T1 = tk.Entry(EMarks, fg = "black", bg = 'white', textvariable = rn, font = ('bahnschrift semibold', 9), width = 10).place(x=300, y=115)
+    
+    #load subjects based on roll number
+    def LOAD():
+        if rn.get() == "":
+            messagebox.showinfo("Failed", "Please enter Roll Number")
+        else:
+            cur.execute("SELECT * FROM SUBJECTS WHERE roll = %s;", (int(rn.get()),))
+            record = cur.fetchone()
+            if record:
+                sub1 = record[1]
+                sub2 = record[2]
+                sub3 = record[3]
+                sub4 = record[4]
+                sub5 = record[5]
+                tk.Label(EMarks, text = 'Exam Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=148)
+                T2 = ttk.Combobox(EMarks, state = "readonly", textvariable = ex, values = ["Half Yearly", "Final Exam"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=158)
+    
+                tk.Label(EMarks, text = sub1, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=191)
+                T3 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m1, font = ('bahnschrift semibold', 9)).place(x=300,y=201)
+    
+                tk.Label(EMarks, text = sub2, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=234)
+                T4 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m2, font = ('bahnschrift semibold', 9)).place(x=300,y=244)
+    
+                tk.Label(EMarks, text = sub3, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=277)
+                T5 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m3, font = ('bahnschrift semibold', 9)).place(x=300,y=287)
+    
+                tk.Label(EMarks, text = sub4, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
+                T6 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m4, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
+    
+                tk.Label(EMarks, text = sub5, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=363)
+                T7 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m5, font = ('bahnschrift semibold', 9)).place(x=300,y=373)
+            else:
+                messagebox.showinfo("Failed", "No subjects assigned for this student")
+            
+    tk.Button(EMarks, text = "Load", command = LOAD, border = 3, font = ("bahnschrift semibold", 7), bg = "gray67", fg = "black", padx = 15).place(x=390, y=113)
+
+    def BACK():
+        EMarks.destroy()
+        ExamMenuForm()
+    tk.Button(EMarks, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=420)
+
+    def CLEAR():
+        rn.set('')
+        ex.set('')
+        m1.set('')
+        m2.set('')
+        m3.set('')
+        m4.set('')
+        m5.set('')
+    tk.Button(EMarks, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=420)
+
+    def VALIDATE():
+        #check for empty fields
+        if rn.get() == "" or ex.get() == "" or m1.get() == "" or m2.get() == "" or m3.get() == "" or m4.get() == "" or m5.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM DATA;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if rn.get() in H:
+                cur.execute("SELECT * FROM MARKS WHERE roll = %s and exam = %s;", (int(rn.get()),ex.get()))
+                exist = cur.fetchone()
+                if exist:
+                    messagebox.showinfo("Failed", "Marks already inserted for this student")
+                else:
+                    roll = int(rn.get())
+                    exam = ex.get()
+                    marks1 = int(m1.get())
+                    marks2 = int(m2.get())
+                    marks3 = int(m3.get())
+                    marks4 = int(m4.get())
+                    marks5 = int(m5.get())
+                    
+                    #validate marks range
+                    if marks1<0 or marks1>100 or marks2<0 or marks2>100 or marks3<0 or marks3>100 or marks4<0 or marks4>100 or marks5<0 or marks5>100:
+                        messagebox.showinfo("Failed", "Marks should be between 0 and 100")
+                    else:
+                        sql = "INSERT INTO MARKS VALUES(%s,%s,%s,%s,%s,%s,%s);"          
+                        data = (roll,exam,marks1,marks2,marks3,marks4,marks5)
+                        #insert new record into database
+                        cur.execute(sql,data)          
+                        myconn.commit()
+                        messagebox.showinfo("Success","Marks inserted")
+                        EMarks.destroy()
+                        ExamMenuForm()
+            else:
+                messagebox.showinfo("Failed", "Invalid Roll Number")
+    tk.Button(EMarks, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
+
+    EMarks.bind('<Return>', lambda event: VALIDATE())
+    
+
+
+#exam marks update form
+def ExamUpdateForm():
+    EUpd = tk.Toplevel()
+    EUpd.geometry('500x400')
+    EUpd.configure(bg = 'cornflower blue')
+    EUpd.title('STUDENT MANAGEMENT SYSTEM')
+    EUpd.resizable(False, False)
+
+    EUpd.protocol("WM_DELETE_WINDOW", lambda: (EUpd.destroy(), start.destroy()))
+
+    tk.Label(EUpd, text = 'UPDATE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+
+    tk.Label(EUpd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
+    rn = tk.StringVar()
+    T1 = tk.Entry(EUpd, fg = "black", bg = "white", textvariable = rn, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+
+    tk.Label(EUpd, text = 'Exam Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=160)
+    ex = tk.StringVar()
+    T2 = ttk.Combobox(EUpd, state = "readonly", textvariable = ex, values = ['Half Yearly', 'Final Exam'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=173)
+    
+    tk.Label(EUpd, text = 'Subject', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=200)
+    sub = tk.StringVar()
+    T2 = ttk.Combobox(EUpd, state = "readonly", textvariable = sub, values = subjects, width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=213)
+
+    tk.Label(EUpd, text = 'New Marks', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
+    mk = tk.StringVar()
+    T3 = tk.Entry(EUpd, fg = "black", bg = "white", textvariable = mk, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=253)
+
+    def BACK():
+        EUpd.destroy()
+        ExamMenuForm()
+    tk.Button(EUpd, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=320)
+
+    def CLEAR():
+        rn.set('')
+        ex.set('')
+        sub.set('')
+        mk.set('')
+    tk.Button(EUpd, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=320)
+
+    def VALIDATE():
+        #check for empty fields
+        if rn.get() == "" or ex.get() == "" or sub.get() == "" or mk.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM MARKS;")
+            L = cur.fetchall()
+            H = []
+            for x in L:
+                H.append(str(x[0]))
+            if rn.get() in H: 
+                #check if subject is assigned to student
+                cur.execute("SELECT subject1, subject2, subject3, subject4, subject5 FROM SUBJECTS WHERE roll = %s", (rn.get(),))
+                subs = cur.fetchone()
+                collist = ["sub1", "sub2", "sub3", "sub4", "sub5"]
+                sublist = list(subs)
+                if sub.get() not in sublist:
+                    messagebox.showinfo("Failed", f"{sub.get()} not assigned for this student")
+                else:
+                    #update marks in the corresponding subject column
+                    index = sublist.index(sub.get())
+                    col = collist[index]
+                    cur.execute(f"UPDATE MARKS SET {col} = {(int(mk.get()))} WHERE roll = {rn.get()} AND exam = '{ex.get()}';")        
+                    myconn.commit()
+                    messagebox.showinfo("Success", "Marks Updated")
+                    EUpd.destroy()
+                    StudentMenuForm()
+            else:
+                messagebox.showinfo("Failed", "Invalid Roll Number")
+    tk.Button(EUpd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
+
+    EUpd.bind('<Return>', lambda event: VALIDATE())
+
+
+
+#exam marks deletion form
+def ExamDeleteForm():
+    EDel = tk.Toplevel()
+    EDel.geometry('500x300')
+    EDel.configure(bg = 'cornflower blue')
+    EDel.title('STUDENT MANAGEMENT SYSTEM')
+    EDel.resizable(False,False)
+
+    EDel.protocol("WM_DELETE_WINDOW", lambda: (EDel.destroy(), start.destroy()))
+
+    tk.Label(EDel, text = 'DELETE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(EDel, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=95)
+    rn = tk.StringVar()
+    T1 = tk.Entry(EDel, fg = "black", bg = "white", textvariable = rn, width = 13, font = ('bahnschrift semibold', 9)).place(x=320, y=108)
+    tk.Label(EDel, text = 'Exam Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=145)
+    ex = tk.StringVar()
+    T2 = ttk.Combobox(EDel, state = "readonly", textvariable = ex, values = ['Half Yearly', 'Final Exam'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=158)
+
+    def BACK():
+        EDel.destroy()
+        StudentMenuForm()
+    tk.Button(EDel, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+
+    def CLEAR():
+        rn.set('')
+        ex.set('')
+    tk.Button(EDel, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+
+    def VALIDATE():
+        #check for empty fields
+        if rn.get() == "" or ex.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM MARKS;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if rn.get() in H:          
+                #confirm deletion
+                confirm = messagebox.askyesno("Confirm Delete", "Delete marks?")          
+                if confirm:
+                    cur.execute(f"DELETE FROM MARKS WHERE roll = {rn.get()} AND exam = '{ex.get()}';")
+                    myconn.commit()
+                    messagebox.showinfo("Success", "Marks Deleted")
+                    EDel.destroy()
+                    ExamMenuForm()
+            else:
+                #invalid roll number message
+                messagebox.showinfo("Failed", "Invalid Roll Number")          
+    tk.Button(EDel, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+
+    EDel.bind('<Return>', lambda event: VALIDATE())
 
 
 
