@@ -6,6 +6,8 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 #database and table creation
@@ -963,6 +965,97 @@ def ExamDeleteForm():
     tk.Button(EDel, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     EDel.bind('<Return>', lambda event: VALIDATE())
+
+
+
+def ExamGraphForm():
+    Del = tk.Toplevel()
+    Del.geometry('500x300')
+    Del.configure(bg = 'cornflower blue')
+    Del.title('STUDENT MANAGEMENT SYSTEM')
+    Del.resizable(False,False)
+
+    Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy()))
+
+    tk.Label(Del, text = 'PLOT GRAPH', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    n = tk.StringVar()
+    T = tk.Entry(Del, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+
+    def BACK():
+        Del.destroy()
+        ExamMenuForm()
+    tk.Button(Del, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+
+    def CLEAR():
+        n.set('')
+    tk.Button(Del, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+
+    def VALIDATE():
+        #check for empty fields
+        if n.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM MARKS;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if n.get() in H:          
+                cur.execute("SELECT subject1, subject2, subject3, subject4, subject5 FROM SUBJECTS WHERE roll = %s;", (int(n.get()),))
+                subs = cur.fetchone()
+                if not subs:
+                    messagebox.showinfo("Failed", "No subjects assigned for this student")
+                else:
+                    subslist = list(subs)
+                    cur.execute("SELECT exam, sub1, sub2, sub3, sub4, sub5 FROM MARKS WHERE roll = %s;", (int(n.get()),))
+                    recs = cur.fetchall()
+                    if not recs:
+                        messagebox.showinfo("Failed", "No marks found for this student")
+                    else:
+                        hy = []
+                        fe = []
+                        for rec in recs:
+                            ex = rec[0]
+                            m = list(rec[1:])
+                
+                            if ex == "Half Yearly":
+                                hy = m
+                            elif ex == "Final Exam":
+                                fe = m
+                
+                        if hy and fe:
+                            plt.figure(figsize=(10,6))
+                            index = np.arange(5)
+                            width = 0.35
+                            plt.bar(index - width/2, hy, width, label='Half Yearly', color='blue')
+                            plt.bar(index + width/2, fe, width, label='Final Exam', color='orange')
+                            plt.xlabel('Subjects')
+                            plt.ylabel('Marks')
+                            plt.xticks(index, subslist, ha='center')
+                            cur.execute("SELECT name FROM DATA WHERE roll = %s;", (int(n.get()),))
+                            nm = cur.fetchone()
+                            plt.title(f'Subject wise marks comparison for {nm[0]} ({n.get()})')
+                            plt.ylim(0, 105)
+                            plt.legend()
+                
+                            for i in range(5):
+                                plt.text(index[i] - width/2, hy[i] + 2, str(hy[i]), ha = 'center')
+                                plt.text(index[i] + width/2, fe[i] + 2, str(fe[i]), ha = 'center')
+                    
+                            plt.tight_layout()
+                            plt.show()
+                        else:
+                            messagebox.showinfo("Failed", "Not enough data to plot graph")
+            else:
+                #invalid roll number message
+                messagebox.showinfo("Failed", "Not enough data to plot graph") 
+                         
+    tk.Button(Del, text = "Plot", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+
+    Del.bind('<Return>', lambda event: VALIDATE())
 
 
 
