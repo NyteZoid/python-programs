@@ -1020,18 +1020,21 @@ def ExamGraphForm():
                     if not recs:
                         messagebox.showinfo("Failed", "No marks found for this student")
                     else:
+                        #prepare data for plotting
                         hy = []
                         fe = []
                         for rec in recs:
                             ex = rec[0]
                             m = list(rec[1:])
-                
+                            
+                            #separate marks based on exam type
                             if ex == "Half Yearly":
                                 hy = m
                             elif ex == "Final Exam":
                                 fe = m
                 
                         if hy and fe:
+                            #plot graph using matplotlib
                             plt.figure(figsize=(10,6))
                             index = np.arange(5)
                             width = 0.35
@@ -1045,11 +1048,12 @@ def ExamGraphForm():
                             plt.title(f'Subject wise marks comparison for {nm[0]} ({n.get()})')
                             plt.ylim(0, 105)
                             plt.legend()
-                
+                            
+                            #add data labels on top of bars
                             for i in range(5):
                                 plt.text(index[i] - width/2, hy[i] + 2, str(hy[i]), ha = 'center')
                                 plt.text(index[i] + width/2, fe[i] + 2, str(fe[i]), ha = 'center')
-                    
+                            
                             plt.tight_layout()
                             plt.show()
                         else:
@@ -1127,7 +1131,8 @@ def ExamPredictForm():
                             nm = cur.fetchone()
                                 
                             predicted = []
-                                
+                            
+                            #predict marks using linear regression   
                             for i in range(5):
                                 x = np.array([[1], [2]])
                                 y = np.array([hy[i], fe[i]])
@@ -1145,7 +1150,8 @@ def ExamPredictForm():
                             xpos = np.arange(3)
                                 
                             colours = ['blue', 'green', 'red', 'purple', 'orange']
-                                
+                            
+                            #plot marks for each subject
                             for i in range(5):
                                 marksp = [hy[i], fe[i], predicted[i]]
                                 plt.plot(xpos, marksp, marker = 'o', label = subslist[i], color = colours[i])
@@ -1198,6 +1204,7 @@ def ExamReportForm():
         n.set('')
     tk.Button(Rep, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=145, y=180)
     
+    #function to determine grade based on marks
     def grade(m):
         if m >= 90:
             return 'A+'
@@ -1252,12 +1259,12 @@ def ExamReportForm():
                         if marks['Final Exam']: 
                             fep = sum(marks['Final Exam'])/5
                         
+                        #generate PDF report card using reportlab
                         filenm = f'Report_Card_Roll_{roll}.pdf'
                         c = canvas.Canvas(filenm)
                         
                         y = 800
                         c.setFont("Times-Roman", 16)
-                        
                         c.drawString(50, y, "DPS PRAYAGRAJ")
                         y = y - 40
                         c.drawString(50, y, "REPORT CARD")
@@ -1271,6 +1278,7 @@ def ExamReportForm():
                         c.drawString(50, y , "Subject wise performance:")
                         y = y - 25
                         
+                        #display marks and grades for each subject
                         for i in range(5):
                             hy = marks['Half Yearly'][i] if marks['Half Yearly'] else '-'
                             fe = marks['Final Exam'][i] if marks['Final Exam'] else '-'
@@ -1279,6 +1287,7 @@ def ExamReportForm():
                             c.drawString(50, y, f"{subslist[i]}: HY: {hy} ({hyg}), FE: {fe} ({feg})")
                             y = y - 20
                             
+                        #display overall percentages
                         y = y - 20
                         if hyp is not None:
                             c.drawString(50, y, f"Half Yearly percentage: {hyp:.2f}%")
