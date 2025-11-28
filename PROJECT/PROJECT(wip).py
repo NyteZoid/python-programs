@@ -9,6 +9,7 @@ import mysql.connector as sqlconn
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
+from reportlab.pdfgen import canvas
 
 
 
@@ -1174,6 +1175,127 @@ def ExamPredictForm():
 
 
 
+def ExamReportForm():
+    Rep = tk.Toplevel()
+    Rep.geometry('400x250')
+    Rep.configure(bg = 'cornflower blue')
+    Rep.title('STUDENT MANAGEMENT SYSTEM')
+    Rep.resizable(False,False)
+    
+    Rep.protocol("WM_DELETE_WINDOW", lambda: (Rep.destroy(), start.destroy()))
+    
+    tk.Label(Rep, text = 'REPORT CARD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 25)).place(x=100, y=20)
+    tk.Label(Rep, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=40,y=100)
+    n = tk.StringVar()
+    T = tk.Entry(Rep, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=220, y=113)
+    
+    def BACK():
+        Rep.destroy()
+        ExamMenuForm()
+    tk.Button(Rep, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=45, y=180)
+    
+    def CLEAR():
+        n.set('')
+    tk.Button(Rep, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=145, y=180)
+    
+    def grade(m):
+        if m >= 90:
+            return 'A+'
+        elif m >= 80:
+            return 'A'
+        elif m >= 70:
+            return 'B+'
+        elif m >= 60:
+            return 'B'
+        elif m >= 50:
+            return 'C+'
+        elif m >= 40:
+            return 'C'
+        elif m >= 33:
+            return 'D'
+        else:
+            return 'F'
+        
+    def GENERATE():
+        if n.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            roll = int(n.get())
+            cur.execute("SELECT name, class, section FROM DATA WHERE roll = %s;", (roll,))
+            data = cur.fetchone()
+            if not data:
+                messagebox.showinfo("Failed", "Invalid Roll Number")
+            else:
+                name = data[0]
+                cls = data[1]
+                sec = data[2]
+                cur.execute("SELECT subject1, subject2, subject3, subject4, subject5 FROM SUBJECTS WHERE roll = %s;", (roll,))
+                subs = cur.fetchone()
+                if not subs:
+                    messagebox.showinfo("Failed", "No subjects assigned for this student")
+                else:
+                    subslist = list(subs)
+                    cur.execute("SELECT exam, sub1, sub2, sub3, sub4, sub5 FROM MARKS WHERE roll = %s;", (roll,))
+                    recs = cur.fetchall()
+                    if not recs:
+                        messagebox.showinfo("Failed", "No marks found for this student")
+                    else:
+                        marks = {'Half Yearly': None, 'Final Exam': None}
+                        for rec in recs:
+                            marks[rec[0]] = list(rec[1:])
+                            
+                        hyp = None
+                        fep = None
+                        
+                        if marks['Half Yearly']:
+                            hyp = sum(marks['Half Yearly'])/5
+                        if marks['Final Exam']: 
+                            fep = sum(marks['Final Exam'])/5
+                        
+                        filenm = f'Report_Card_Roll_{roll}.pdf'
+                        c = canvas.Canvas(filenm)
+                        
+                        y = 800
+                        c.setFont("Times-Roman", 16)
+                        
+                        c.drawString(50, y, "DPS PRAYAGRAJ")
+                        y = y - 40
+                        c.drawString(50, y, "REPORT CARD")
+                        y = y - 40
+                        c.drawString(50, y, f"Name: {name}")
+                        y = y - 20
+                        c.drawString(50, y, f"Class: {cls}-{sec}")
+                        y = y - 20
+                        c.drawString(50, y, f"Roll Number: {roll}")
+                        y = y - 30
+                        c.drawString(50, y , "Subject wise performance:")
+                        y = y - 25
+                        
+                        for i in range(5):
+                            hy = marks['Half Yearly'][i] if marks['Half Yearly'] else '-'
+                            fe = marks['Final Exam'][i] if marks['Final Exam'] else '-'
+                            hyg = grade(hy) if hy != '-' else '-'
+                            feg = grade(fe) if fe != '-' else '-'
+                            c.drawString(50, y, f"{subslist[i]}: HY: {hy} ({hyg}), FE: {fe} ({feg})")
+                            y = y - 20
+                            
+                        y = y - 20
+                        if hyp is not None:
+                            c.drawString(50, y, f"Half Yearly percentage: {hyp:.2f}%")
+                            y = y - 20
+                        if fep is not None:
+                            c.drawString(50, y, f"Final Exam percentage: {fep:.2f}%")
+                            y = y - 20
+                            
+                        c.save()
+                        messagebox.showinfo("Success", f"Report card generated as {filenm}")
+                        
+    tk.Button(Rep, text = "Generate", command = GENERATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 1).place(x=250, y=180)
+                        
+    Rep.bind("<Return>", lambda event: GENERATE())
+    
+    
+    
 #start the application
 Main()
 
