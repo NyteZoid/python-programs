@@ -969,27 +969,27 @@ def ExamDeleteForm():
 
 
 def ExamGraphForm():
-    Del = tk.Toplevel()
-    Del.geometry('500x300')
-    Del.configure(bg = 'cornflower blue')
-    Del.title('STUDENT MANAGEMENT SYSTEM')
-    Del.resizable(False,False)
+    Grph = tk.Toplevel()
+    Grph.geometry('500x300')
+    Grph.configure(bg = 'cornflower blue')
+    Grph.title('STUDENT MANAGEMENT SYSTEM')
+    Grph.resizable(False,False)
 
-    Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy()))
+    Grph.protocol("WM_DELETE_WINDOW", lambda: (Grph.destroy(), start.destroy()))
 
-    tk.Label(Del, text = 'PLOT GRAPH', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
-    tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    tk.Label(Grph, text = 'PLOT GRAPH', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(Grph, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
     n = tk.StringVar()
-    T = tk.Entry(Del, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+    T = tk.Entry(Grph, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
     def BACK():
-        Del.destroy()
+        Grph.destroy()
         ExamMenuForm()
-    tk.Button(Del, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+    tk.Button(Grph, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
 
     def CLEAR():
         n.set('')
-    tk.Button(Del, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+    tk.Button(Grph, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
 
     def VALIDATE():
         #check for empty fields
@@ -1053,9 +1053,9 @@ def ExamGraphForm():
                 #invalid roll number message
                 messagebox.showinfo("Failed", "Not enough data to plot graph") 
                          
-    tk.Button(Del, text = "Plot", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+    tk.Button(Grph, text = "Plot", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
-    Del.bind('<Return>', lambda event: VALIDATE())
+    Grph.bind('<Return>', lambda event: VALIDATE())
 
 
 
