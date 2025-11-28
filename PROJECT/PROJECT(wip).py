@@ -8,6 +8,8 @@ from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.linear_model import LinearRegression
+
 
 
 #database and table creation
@@ -55,6 +57,8 @@ cur.execute('''CREATE TABLE IF NOT EXISTS MARKS(
 subjects = ['Accountancy', 'Applied Maths', 'Biology', 'Business Studies', 'Chemistry', 'Computer Science', 'Dance', 
             'Economics', 'English', 'Fine Arts', 'French', 'Geography', 'Hindi', 'History', 'Legal Studies', 'Mathematics', 
             'Music', 'PE', 'Physics', 'Pol Science', 'Psychology', 'Science', 'Social Science', 'Taxation']
+
+
 
 #start window
 def Main():
@@ -930,7 +934,7 @@ def ExamDeleteForm():
 
     def BACK():
         EDel.destroy()
-        StudentMenuForm()
+        ExamMenuForm()
     tk.Button(EDel, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
 
     def CLEAR():
@@ -1056,6 +1060,117 @@ def ExamGraphForm():
     tk.Button(Grph, text = "Plot", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
 
     Grph.bind('<Return>', lambda event: VALIDATE())
+
+
+
+def ExamPredictForm():
+    Pred = tk.Toplevel()
+    Pred.geometry('500x300')
+    Pred.configure(bg = 'cornflower blue')
+    Pred.title('STUDENT MANAGEMENT SYSTEM')
+    Pred.resizable(False,False)
+    
+    Pred.protocol("WM_DELETE_WINDOW", lambda: (Pred.destroy(), start.destroy()))
+    
+    tk.Label(Pred, text = 'PREDICT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+    tk.Label(Pred, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    n = tk.StringVar()
+    T = tk.Entry(Pred, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
+    
+    def BACK():
+        Pred.destroy()
+        ExamMenuForm()
+    tk.Button(Pred, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=60, y=220)
+    
+    def CLEAR():
+        n.set('')
+    tk.Button(Pred, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=192.5, y=220)
+    
+    def VALIDATE():
+        #check for empty fields
+        if n.get() == "":        
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            cur.execute("SELECT roll FROM MARKS;")
+            L = cur.fetchall()          
+            H = []
+            for x in L:
+                #create list of existing roll numbers
+                H.append(str(x[0]))    
+            #check if roll number exists     
+            if n.get() in H:          
+                cur.execute("SELECT subject1, subject2, subject3, subject4, subject5 FROM SUBJECTS WHERE roll = %s;", (int(n.get()),))
+                subs = cur.fetchone()
+                if not subs:
+                    messagebox.showinfo("Failed", "No subjects assigned for this student")
+                else:
+                    subslist = list(subs)
+                    cur.execute("SELECT exam, sub1, sub2, sub3, sub4, sub5 FROM MARKS WHERE roll = %s;", (int(n.get()),))
+                    recs = cur.fetchall()
+                    if not recs:
+                        messagebox.showinfo("Failed", "Not enough data to predict marks")
+                    else:
+                        hy = []
+                        fe = []
+                        for rec in recs:
+                            ex = rec[0]
+                            m = list(rec[1:])
+                            
+                            if ex == "Half Yearly":
+                                hy = m
+                            elif ex == "Final Exam":
+                                fe = m
+                                
+                        if hy and fe:
+                            cur.execute("SELECT name FROM DATA WHERE roll = %s;", (int(n.get()),))
+                            nm = cur.fetchone()
+                                
+                            predicted = []
+                                
+                            for i in range(5):
+                                x = np.array([[1], [2]])
+                                y = np.array([hy[i], fe[i]])
+                                    
+                                model = LinearRegression()
+                                model.fit(x,y)
+                                    
+                                next = model.predict([[3]])[0]
+                                next = max(0, min(100, next))
+                                predicted.append(round(next,2))
+                                
+                            plt.figure(figsize=(12,7))
+                                
+                            exams = ['Half Yearly', 'Final Exam', 'Predicted']
+                            xpos = np.arange(3)
+                                
+                            colours = ['blue', 'green', 'red', 'purple', 'orange']
+                                
+                            for i in range(5):
+                                marksp = [hy[i], fe[i], predicted[i]]
+                                plt.plot(xpos, marksp, marker = 'o', label = subslist[i], color = colours[i])
+                                    
+                                for k, v in enumerate(marksp):
+                                    plt.text(xpos[k], v + 2, f'{v:.1f}', ha = 'center')
+                                        
+                            plt.xlabel('Exams')
+                            plt.ylabel('Marks')
+                            plt.title(f'Marks Prediction for {nm[0]} ({n.get()})')
+                            plt.xticks(xpos, exams)
+                            plt.ylim(0, 110)
+                            plt.legend()
+                            plt.grid()
+                                
+                            plt.tight_layout()
+                            plt.show()
+                        else:
+                            messagebox.showinfo("Failed", "Not enough data to predict marks")            
+            else:
+                #invalid roll number message
+                messagebox.showinfo("Failed", "Invalid Roll Number")
+                
+    tk.Button(Pred, text = "Predict", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 14).place(x=325, y=220)
+
+    Pred.bind('<Return>', lambda event: VALIDATE())
 
 
 
