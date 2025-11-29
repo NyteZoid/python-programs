@@ -6,6 +6,9 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
+import json
+import os
+import hashlib
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
@@ -13,52 +16,12 @@ from reportlab.pdfgen import canvas
 
 
 
-#database and table creation
-myconn = sqlconn.connect(
-    host = "localhost",
-    user = "root",
-    password = "1809")
-
-cur = myconn.cursor()
-cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
-cur.execute("USE SDBMS;")
-
-#create student data table
-cur.execute('''CREATE TABLE IF NOT EXISTS DATA(
-                roll INT PRIMARY KEY,
-                name VARCHAR(30),
-                class INT, 
-                section CHAR(1), 
-                gender VARCHAR(6)
-            );''')
-
-#create subjects table
-cur.execute('''CREATE TABLE IF NOT EXISTS SUBJECTS(
-                roll INT PRIMARY KEY,
-                subject1 VARCHAR(20),
-                subject2 VARCHAR(20),
-                subject3 VARCHAR(20),
-                subject4 VARCHAR(20),
-                subject5 VARCHAR(20)
-            );''')
-
-#create marks table
-cur.execute('''CREATE TABLE IF NOT EXISTS MARKS(
-                roll INT,
-                exam VARCHAR(20),
-                sub1 INT,
-                sub2 INT,
-                sub3 INT,
-                sub4 INT,
-                sub5 INT,
-                PRIMARY KEY(roll, exam)
-            );''')
-
-#list of available subjects
-subjects = ['Accountancy', 'Applied Maths', 'Biology', 'Business Studies', 'Chemistry', 'Computer Science', 'Dance', 
-            'Economics', 'English', 'Fine Arts', 'French', 'Geography', 'Hindi', 'History', 'Legal Studies', 'Mathematics', 
-            'Music', 'PE', 'Physics', 'Pol Science', 'Psychology', 'Science', 'Social Science', 'Taxation']
-
+#password hashing and verification
+def hash(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+def verify(hashed, provided):
+    return hashed == hash(provided)
+    
 
 
 #start window
@@ -87,7 +50,7 @@ def Main():
                 start.after(15, lambda: startpb(pb, maxval, start))          
             else:
                 start.withdraw()
-                LoginForm()
+                passcheck()
 
         #to create progress bar window
         def windowpb():          
@@ -114,8 +77,131 @@ def Main():
 
     progressbar()
     #mainloop for start window
-    start.mainloop()          
+    start.mainloop()
+
+
+#password check window
+def passcheck():
+    pss = tk.Toplevel()
+    pss.geometry('400x200')
+    pss.configure(bg = 'cornflower blue')
+    pss.title('STUDENT MANAGEMENT SYSTEM')
+    pss.resizable(False, False)
     
+    pss.protocol("WM_DELETE_WINDOW", lambda: (pss.destroy(), start.destroy()))
+    
+    tk.Label(pss, text = 'ENTER SQL PASSWORD', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=60, y=20)
+    n = tk.StringVar()
+    T = tk.Entry(pss, fg = "black", bg = "white", textvariable = n, show = "*", width = 20, font = ('bahnschrift semibold', 10)).place(x=125, y=80)
+    
+    #validate sql password
+    def VALIDATE():
+        try:
+            #connect to mysql server
+            global myconn
+            myconn = sqlconn.connect(
+                host = "localhost",
+                user = "root",
+                password = n.get())
+            
+            #create cursor
+            global cur
+            cur = myconn.cursor()
+            cur.execute("CREATE DATABASE IF NOT EXISTS SDBMS;")
+            cur.execute("USE SDBMS;")
+
+            #create student data table
+            cur.execute('''CREATE TABLE IF NOT EXISTS DATA(
+                            roll INT PRIMARY KEY,
+                            name VARCHAR(30),
+                            class INT, 
+                            section CHAR(1), 
+                            gender VARCHAR(6)
+                        );''')
+
+            #create subjects table
+            cur.execute('''CREATE TABLE IF NOT EXISTS SUBJECTS(
+                            roll INT PRIMARY KEY,
+                            subject1 VARCHAR(20),
+                            subject2 VARCHAR(20),
+                            subject3 VARCHAR(20),
+                            subject4 VARCHAR(20),
+                            subject5 VARCHAR(20)
+                        );''')
+
+            #create marks table
+            cur.execute('''CREATE TABLE IF NOT EXISTS MARKS(
+                            roll INT,
+                            exam VARCHAR(20),
+                            sub1 INT,
+                            sub2 INT,
+                            sub3 INT,
+                            sub4 INT,
+                            sub5 INT,
+                            PRIMARY KEY(roll, exam)
+                        );''')
+            pss.destroy()
+            LRForm()
+        except:
+            messagebox.showinfo("Access Denied", "Invalid SQL Password")
+            n.set('')
+            
+    tk.Button(pss, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=145, y=130)
+    
+    pss.bind('<Return>', lambda event: VALIDATE()) 
+
+
+
+#list of available subjects
+subjects = ['Accountancy', 'Applied Maths', 'Biology', 'Business Studies', 'Chemistry', 'Computer Science', 'Dance', 
+            'Economics', 'English', 'Fine Arts', 'French', 'Geography', 'Hindi', 'History', 'Legal Studies', 'Mathematics', 
+            'Music', 'PE', 'Physics', 'Pol Science', 'Psychology', 'Science', 'Social Science', 'Taxation']
+          
+    
+    
+#load and save registered users
+userfile = "users.json"
+def Load():
+    if os.path.exists(userfile):
+        try:
+            with open(userfile, 'r') as F:
+                return json.load(F)
+        except:
+            return {}
+    else:
+        return {}
+def Save():
+    with open(userfile, 'w') as F:
+        json.dump(registered, F)
+registered = Load()
+    
+    
+    
+#login/register window 
+def LRForm():
+    LRMenu = tk.Toplevel()
+    LRMenu.geometry('400x300')
+    LRMenu.configure(bg = 'cornflower blue')
+    LRMenu.title('STUDENT MANAGEMENT SYSTEM')
+    LRMenu.resizable(False, False)
+
+    LRMenu.protocol("WM_DELETE_WINDOW", lambda: (LRMenu.destroy(), start.destroy(), myconn.close()))
+
+    tk.Label(LRMenu, text = 'LOGIN/REGISTER', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=45, y=20)
+
+    def LOGIN():
+        if not registered:
+            messagebox.showinfo("No Users", "No registered users found. Please register first.")
+        else:
+            LRMenu.destroy()
+            LoginForm()
+    tk.Button(LRMenu, text = "LOGIN", command = LOGIN, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=150, y=115)
+    
+    def REGISTER():
+        LRMenu.destroy()
+        RegisterForm()        
+    tk.Button(LRMenu, text = "REGISTER", command = REGISTER, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 1).place(x=147, y=200)
+
 
 
 #login window
@@ -126,7 +212,7 @@ def LoginForm():
     Myform.title('STUDENT MANAGEMENT SYSTEM')
     Myform.resizable(False, False)
 
-    Myform.protocol("WM_DELETE_WINDOW", lambda: (Myform.destroy(), start.destroy()))
+    Myform.protocol("WM_DELETE_WINDOW", lambda: (Myform.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Myform, text = 'LOGIN', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
     tk.Label(Myform, text = 'User Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=98)
@@ -139,8 +225,7 @@ def LoginForm():
 
     def BACK():
         Myform.destroy()
-        #show start window again
-        start.deiconify()          
+        LRForm()      
     tk.Button(Myform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
 
     def CLEAR():
@@ -150,17 +235,75 @@ def LoginForm():
 
     def VALIDATE():
         #check for valid credentials
-        if v1.get() == "abhiraj" and v2.get() == "1809":          
-            Myform.destroy()
-            MenuForm()
+        if v1.get() == "" or v2.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
         else:
-            messagebox.showinfo("Access Denied", "Invalid Username or Password")
-            v1.set('')
-            v2.set('')
+            if v1.get() in registered:
+                if verify(registered[v1.get()],v2.get()):     
+                    Myform.destroy()
+                    MenuForm()
+                else:
+                    messagebox.showinfo("Access Denied", "Invalid Username or Password")
+                    v1.set('')
+                    v2.set('')
+            else:
+                messagebox.showinfo("Access Denied", "Invalid Username or Password")
+                v1.set('')
+                v2.set('')
     tk.Button(Myform, text = "Login", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=262, y=220)
 
     #bind enter key to validate login credentials
     Myform.bind('<Return>', lambda event: VALIDATE())          
+
+
+
+#register window
+def RegisterForm():
+    Rform = tk.Toplevel()
+    Rform.geometry('400x300')
+    Rform.configure(bg = 'cornflower blue')
+    Rform.title('STUDENT MANAGEMENT SYSTEM')
+    Rform.resizable(False, False)
+
+    Rform.protocol("WM_DELETE_WINDOW", lambda: (Rform.destroy(), start.destroy(), myconn.close()))
+
+    tk.Label(Rform, text = 'REGISTER', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=110, y=20)
+    tk.Label(Rform, text = 'User Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=98)
+    tk.Label(Rform, text = 'Password', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=52, y=148)
+
+    v1 = tk.StringVar()
+    v2 = tk.StringVar()
+    T1 = tk.Entry(Rform, fg = "black", bg = "white", textvariable = v1, font = ('bahnschrift semibold', 10)).place(x=202, y=110)
+    T2 = tk.Entry(Rform, fg = "black", bg = "white", textvariable = v2, show = "*",font = ('bahnschrift semibold', 10)).place(x=202, y=160)
+
+    def BACK():
+        Rform.destroy()
+        LRForm()      
+    tk.Button(Rform, text = "Back", command = BACK, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=42, y=220)
+
+    def CLEAR():
+        v1.set('')
+        v2.set('')
+    tk.Button(Rform, text = "Clear", command = CLEAR, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=152, y=220)
+
+    def VALIDATE():
+        if v1.get() == "" or v2.get() == "":          
+            messagebox.showinfo("Failed", "Please fill all fields")
+        else:
+            if v1.get() in registered:
+                messagebox.showinfo("Failed", "Username already exists")
+                v1.set('')
+                v2.set('')
+            else:
+                registered[v1.get()] = hash(v2.get())
+                Save()
+                messagebox.showinfo("Success", "Registration Successful. Please login now.")
+                Rform.destroy()
+                LRForm()
+    tk.Button(Rform, text = "Register", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 5).place(x=262, y=220)
+
+    #bind enter key to validate login credentials
+    Rform.bind('<Return>', lambda event: VALIDATE())   
 
 
 
@@ -172,7 +315,7 @@ def MenuForm():
     Menu.title('STUDENT MANAGEMENT SYSTEM')
     Menu.resizable(False, False)
 
-    Menu.protocol("WM_DELETE_WINDOW", lambda: (Menu.destroy(), start.destroy()))
+    Menu.protocol("WM_DELETE_WINDOW", lambda: (Menu.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Menu, text = 'MENU', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=145, y=20)
 
@@ -196,7 +339,7 @@ def StudentMenuForm():
     SMenu.title('STUDENT MANAGEMENT SYSTEM')
     SMenu.resizable(False,False)
 
-    SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy()))
+    SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=115, y=50)
 
@@ -236,7 +379,7 @@ def NewForm():
     New.title('STUDENT MANAGEMENT SYSTEM')
     New.resizable(False,False)
 
-    New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy()))
+    New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
     try:
@@ -309,7 +452,7 @@ def DeleteForm():
     Del.title('STUDENT MANAGEMENT SYSTEM')
     Del.resizable(False,False)
 
-    Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy()))
+    Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
     tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
@@ -363,7 +506,7 @@ def DisplayForm():
     Dis.title('STUDENT MANAGEMENT SYSTEM')
     Dis.resizable(False, False)
 
-    Dis.protocol("WM_DELETE_WINDOW", lambda: (Dis.destroy(), start.destroy()))
+    Dis.protocol("WM_DELETE_WINDOW", lambda: (Dis.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
@@ -420,7 +563,7 @@ def UpdateForm():
     Upd.title('STUDENT MANAGEMENT SYSTEM')
     Upd.resizable(False, False)
 
-    Upd.protocol("WM_DELETE_WINDOW", lambda: (Upd.destroy(), start.destroy()))
+    Upd.protocol("WM_DELETE_WINDOW", lambda: (Upd.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
@@ -483,7 +626,7 @@ def SearchForm():
     Ser.title('STUDENT MANAGEMENT SYSTEM')
     Ser.resizable(False, False)
 
-    Ser.protocol("WM_DELETE_WINDOW", lambda: (Ser.destroy(), start.destroy()))
+    Ser.protocol("WM_DELETE_WINDOW", lambda: (Ser.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
@@ -584,7 +727,7 @@ def ExamMenuForm():
     EMenu.title('STUDENT MANAGEMENT SYSTEM')
     EMenu.resizable(False,False)
 
-    EMenu.protocol("WM_DELETE_WINDOW", lambda: (EMenu.destroy(), start.destroy()))
+    EMenu.protocol("WM_DELETE_WINDOW", lambda: (EMenu.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(EMenu, text = 'EXAM MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=135, y=50)
 
@@ -632,7 +775,7 @@ def ExamSubjectsForm():
     ESub.title('STUDENT MANAGEMENT SYSTEM')
     ESub.resizable(False,False)
 
-    ESub.protocol("WM_DELETE_WINDOW", lambda: (ESub.destroy(), start.destroy()))
+    ESub.protocol("WM_DELETE_WINDOW", lambda: (ESub.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(ESub, text = 'ASSIGN SUBJECTS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=90, y=20)      
 
@@ -729,7 +872,7 @@ def ExamMarksForm():
     EMarks.title('STUDENT MANAGEMENT SYSTEM')
     EMarks.resizable(False,False)
 
-    EMarks.protocol("WM_DELETE_WINDOW", lambda: (EMarks.destroy(), start.destroy()))
+    EMarks.protocol("WM_DELETE_WINDOW", lambda: (EMarks.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(EMarks, text = 'INSERT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=110, y=20)      
 
@@ -848,7 +991,7 @@ def ExamUpdateForm():
     EUpd.title('STUDENT MANAGEMENT SYSTEM')
     EUpd.resizable(False, False)
 
-    EUpd.protocol("WM_DELETE_WINDOW", lambda: (EUpd.destroy(), start.destroy()))
+    EUpd.protocol("WM_DELETE_WINDOW", lambda: (EUpd.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(EUpd, text = 'UPDATE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
@@ -923,7 +1066,7 @@ def ExamDeleteForm():
     EDel.title('STUDENT MANAGEMENT SYSTEM')
     EDel.resizable(False,False)
 
-    EDel.protocol("WM_DELETE_WINDOW", lambda: (EDel.destroy(), start.destroy()))
+    EDel.protocol("WM_DELETE_WINDOW", lambda: (EDel.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(EDel, text = 'DELETE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
     tk.Label(EDel, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=95)
@@ -980,7 +1123,7 @@ def ExamGraphForm():
     Grph.title('STUDENT MANAGEMENT SYSTEM')
     Grph.resizable(False,False)
 
-    Grph.protocol("WM_DELETE_WINDOW", lambda: (Grph.destroy(), start.destroy()))
+    Grph.protocol("WM_DELETE_WINDOW", lambda: (Grph.destroy(), start.destroy(), myconn.close()))
 
     tk.Label(Grph, text = 'PLOT GRAPH', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
     tk.Label(Grph, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
@@ -1075,7 +1218,7 @@ def ExamPredictForm():
     Pred.title('STUDENT MANAGEMENT SYSTEM')
     Pred.resizable(False,False)
     
-    Pred.protocol("WM_DELETE_WINDOW", lambda: (Pred.destroy(), start.destroy()))
+    Pred.protocol("WM_DELETE_WINDOW", lambda: (Pred.destroy(), start.destroy(), myconn.close()))
     
     tk.Label(Pred, text = 'PREDICT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
     tk.Label(Pred, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
@@ -1188,7 +1331,7 @@ def ExamReportForm():
     Rep.title('STUDENT MANAGEMENT SYSTEM')
     Rep.resizable(False,False)
     
-    Rep.protocol("WM_DELETE_WINDOW", lambda: (Rep.destroy(), start.destroy()))
+    Rep.protocol("WM_DELETE_WINDOW", lambda: (Rep.destroy(), start.destroy(), myconn.close()))
     
     tk.Label(Rep, text = 'REPORT CARD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 25)).place(x=100, y=20)
     tk.Label(Rep, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=40,y=100)
@@ -1306,12 +1449,7 @@ def ExamReportForm():
     
     
 #start the application
-Main()
-
-
-
-#close database connection when application ends
-myconn.close()          
+Main()         
 
 
 
