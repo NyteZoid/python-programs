@@ -74,7 +74,7 @@ def Main():
             if val < maxval:
                 pb['value'] = pb['value'] + 1 
                 #increments in progress bar value
-                start.after(15, lambda: startpb(pb, maxval, start))          
+                start.after(30, lambda: startpb(pb, maxval, start))          
             else:
                 start.withdraw()
                 passcheck()
@@ -427,7 +427,7 @@ def NewForm():
     gn = tk.StringVar()
 
     tk.Label(New, text='Roll Number', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
-    T1 = tk.Entry(New, fg = "black", bg = "gray67", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
+    T1 = tk.Entry(New, fg = "black", bg = "white", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
     tk.Label(New, text='Name', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
     T2 = tk.Entry(New, fg = "black", bg = "white", textvariable = nm, font = ('bahnschrift semibold', 9)).place(x=300, y=180)
     tk.Label(New, text = 'Class', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
@@ -521,7 +521,7 @@ def DeleteForm():
             else:
                 #invalid roll number message
                 messagebox.showinfo("Failed", "Invalid Roll Number")          
-    tk.Button(Del, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+    tk.Button(Del, text = "Delete", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 13).place(x=325, y=220)
 
     Del.bind('<Return>', lambda event: VALIDATE())
 
@@ -884,7 +884,7 @@ def ExamSubjectsForm():
                     myconn.commit()
                     messagebox.showinfo("Success","Subjects assigned")
                     ESub.destroy()
-                    StudentMenuForm()
+                    ExamMenuForm()
             else:
                 messagebox.showinfo("Failed", "Invalid Roll Number")
     tk.Button(ESub, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=420)
@@ -1083,7 +1083,7 @@ def ExamUpdateForm():
                     myconn.commit()
                     messagebox.showinfo("Success", "Marks Updated")
                     EUpd.destroy()
-                    StudentMenuForm()
+                    ExamMenuForm()
             else:
                 messagebox.showinfo("Failed", "Invalid Roll Number")
     tk.Button(EUpd, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=320)
@@ -1144,7 +1144,7 @@ def ExamDeleteForm():
             else:
                 #invalid roll number message
                 messagebox.showinfo("Failed", "Invalid Roll Number")          
-    tk.Button(EDel, text = "Enter", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 15).place(x=325, y=220)
+    tk.Button(EDel, text = "Delete", command = VALIDATE, border = 3, font = ("bahnschrift semibold", 15), bg = "gray67", fg = "black", padx = 13).place(x=325, y=220)
 
     EDel.bind('<Return>', lambda event: VALIDATE())
 
