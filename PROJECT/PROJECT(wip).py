@@ -6,6 +6,7 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
 import mysql.connector as sqlconn
+from PIL import Image, ImageTk, ImageEnhance
 import json
 import os
 import hashlib
@@ -16,12 +17,23 @@ from reportlab.pdfgen import canvas
 
 
 
+#define all file paths
+prgrm = os.path.dirname(os.path.abspath(__file__))
+assets = os.path.join(prgrm, "assets")
+if not os.path.exists(assets):
+    os.makedirs(assets)
+logopath = os.path.join(assets, "logo_dps.png")
+iconpath = os.path.join(assets, "dl.png")
+userfilepath = os.path.join(assets, "users.json")
+
+
+
 #password hashing and verification
 def hash(password):
     return hashlib.sha256(password.encode()).hexdigest()
 def verify(hashed, provided):
     return hashed == hash(provided)
-    
+
 
 
 #start window
@@ -33,12 +45,27 @@ def Main():
     start.title('STUDENT MANAGEMENT SYSTEM')
     start.resizable(False, False)
     
+    #create canvas for layering
+    canvas = tk.Canvas(start, width = 700, height = 600, bg = 'cornflower blue', highlightthickness=0)
+    canvas.pack(fill = 'both', expand = True)
+    
+    #load school logo
+    logo = Image.open(logopath).resize((265,331)).convert("RGBA")
+    al = logo.split()[3]
+    al = ImageEnhance.Brightness(al).enhance(0.15)
+    logo.putalpha(al)
+    watermark = ImageTk.PhotoImage(logo)
+    
+    #place watermark on canvas
+    canvas.create_image(350, 300, image=watermark)
+    canvas.image = watermark
+    
     #to handle window close event
     start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy()))          
 
-    tk.Label(start, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fg = 'black', bg = "cornflower blue", font = ('Times New Roman', 20)).place(x=120, y=50)
-    tk.Label(start, text = 'STUDENT MANAGEMENT SYSTEM', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 30)).place(x=50, y=120)
-    tk.Label(start, text = 'By :- Abhiraj Mandal', fg = 'black', bg = "cornflower blue", font = ('Bahnschrift bold', 20)).place(x=225, y=400)
+    canvas.create_text(350, 50, text = 'DELHI PUBLIC SCHOOL PRAYAGRAJ', fill = 'black', font = ('Times New Roman', 20))
+    canvas.create_text(350, 120, text = 'STUDENT MANAGEMENT SYSTEM', fill = 'black', font = ('Bahnschrift bold', 30))
+    canvas.create_text(350, 400, text = 'By :- Abhiraj Mandal', fill = 'black', font = ('Bahnschrift bold', 20))
 
     def progressbar():
         #to start progress bar
@@ -161,7 +188,7 @@ subjects = ['Accountancy', 'Applied Maths', 'Biology', 'Business Studies', 'Chem
     
     
 #load and save registered users
-userfile = "users.json"
+userfile = userfilepath
 def Load():
     if os.path.exists(userfile):
         try:
@@ -888,6 +915,9 @@ def ExamMarksForm():
     tk.Label(EMarks, text = 'Roll Number', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=105)
     T1 = tk.Entry(EMarks, fg = "black", bg = 'white', textvariable = rn, font = ('bahnschrift semibold', 9), width = 10).place(x=300, y=115)
     
+    icon = Image.open(iconpath).resize((20, 20))
+    dl = ImageTk.PhotoImage(icon)
+    
     #load subjects based on roll number
     def LOAD():
         if rn.get() == "":
@@ -921,8 +951,10 @@ def ExamMarksForm():
             else:
                 messagebox.showinfo("Failed", "No subjects assigned for this student")
             
-    tk.Button(EMarks, text = "Load", command = LOAD, border = 3, font = ("bahnschrift semibold", 7), bg = "gray67", fg = "black", padx = 15).place(x=390, y=113)
-
+    dlbtn = tk.Button(EMarks, text = "Load", image = dl, command = LOAD, border = 3, font = ("bahnschrift semibold", 7), bg = "gray67", fg = "black", padx = 15)
+    dlbtn.image = dl
+    dlbtn.place(x=390, y=113)
+    
     def BACK():
         EMarks.destroy()
         ExamMenuForm()
