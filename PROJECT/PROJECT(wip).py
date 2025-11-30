@@ -70,7 +70,8 @@ def Main():
             maxval = 100
             pb["maximum"] = maxval
             #start progress bar updates
-            start.after(100, lambda: startpb(pb, maxval, start))          
+            start.after(100, lambda: startpb(pb, maxval, start))       
+               
             start.protocol("WM_DELETE_WINDOW", lambda: (start.destroy())) 
 
         windowpb()
@@ -335,13 +336,13 @@ def MenuForm():
 def StudentMenuForm():
     SMenu = tk.Toplevel()
     SMenu.geometry('500x500')
-    SMenu.configure(bg = 'cornflower blue')
+    SMenu.configure(bg = 'seagreen3')
     SMenu.title('STUDENT MANAGEMENT SYSTEM')
     SMenu.resizable(False,False)
 
     SMenu.protocol("WM_DELETE_WINDOW", lambda: (SMenu.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=115, y=50)
+    tk.Label(SMenu, text = 'STUDENT MENU', fg = 'black', bg = "seagreen3", font = ('bahnschrift bold', 30)).place(x=115, y=50)
 
     def New():
         SMenu.destroy()
@@ -375,13 +376,13 @@ def StudentMenuForm():
 def NewForm():
     New = tk.Toplevel()
     New.geometry('500x500')
-    New.configure(bg = 'cornflower blue')
+    New.configure(bg = 'seagreen3')
     New.title('STUDENT MANAGEMENT SYSTEM')
     New.resizable(False,False)
 
     New.protocol("WM_DELETE_WINDOW", lambda: (New.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(New, text = 'NEW RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=120, y=20)
+    tk.Label(New, text = 'NEW RECORD', fg = 'black', bg = 'seagreen3', font = ('bahnschrift bold', 30)).place(x=120, y=20)
     try:
         #get the max roll number to assign next roll number
         cur.execute("SELECT max(roll) FROM DATA")          
@@ -397,15 +398,15 @@ def NewForm():
     sc = tk.StringVar()
     gn = tk.StringVar()
 
-    tk.Label(New, text='Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
+    tk.Label(New, text='Roll Number', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=120)
     T1 = tk.Entry(New, fg = "black", bg = "gray67", textvariable = rn, state = "readonly", font = ('bahnschrift semibold', 9)).place(x=300, y=130)
-    tk.Label(New, text='Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
+    tk.Label(New, text='Name', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=170)
     T2 = tk.Entry(New, fg = "black", bg = "white", textvariable = nm, font = ('bahnschrift semibold', 9)).place(x=300, y=180)
-    tk.Label(New, text = 'Class', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
+    tk.Label(New, text = 'Class', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=220)
     T3 = ttk.Combobox(New, state = "readonly", textvariable = cl, values = [1,2,3,4,5,6,7,8,9,10,11,12], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=230)
-    tk.Label(New, text = 'Section', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
+    tk.Label(New, text = 'Section', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=270)
     T4 = ttk.Combobox(New, state = "readonly", textvariable = sc, values = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=280)
-    tk.Label(New, text = 'Gender', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
+    tk.Label(New, text = 'Gender', fg = 'black', bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
     T5 = ttk.Combobox(New, state = "readonly", textvariable = gn, values = ["MALE", "FEMALE", "OTHER"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
 
     def BACK():
@@ -448,14 +449,14 @@ def NewForm():
 def DeleteForm():
     Del = tk.Toplevel()
     Del.geometry('500x300')
-    Del.configure(bg = 'cornflower blue')
+    Del.configure(bg = 'seagreen3')
     Del.title('STUDENT MANAGEMENT SYSTEM')
     Del.resizable(False,False)
 
     Del.protocol("WM_DELETE_WINDOW", lambda: (Del.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
-    tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    tk.Label(Del, text = 'DELETE RECORD', fg = 'black', bg = 'seagreen3', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(Del, text = 'Roll Number', fg = 'black',bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
     n = tk.StringVar()
     T = tk.Entry(Del, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
@@ -502,20 +503,20 @@ def DeleteForm():
 def DisplayForm():
     Dis = tk.Toplevel()
     Dis.geometry('700x500')
-    Dis.configure(bg = 'cornflower blue')
+    Dis.configure(bg = 'seagreen3')
     Dis.title('STUDENT MANAGEMENT SYSTEM')
     Dis.resizable(False, False)
 
     Dis.protocol("WM_DELETE_WINDOW", lambda: (Dis.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
+    tk.Label(Dis, text = 'DISPLAY RECORDS', fg = 'black', bg = 'seagreen3', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
     style = ttk.Style()    
     #set theme for treeview      
     style.theme_use('clam')          
     style.configure("Treeview", background = "white", foreground = "black", rowheight = 25, fieldbackground = "white")     
     #style for selected row     
-    style.map('Treeview', background = [('selected', 'cornflower blue')])          
+    style.map('Treeview', background = [('selected', 'seagreen3')])          
 
     #create treeview for displaying records
     tree = ttk.Treeview(Dis, columns = ("roll", "name", "class", "section", "gender"), show = 'headings', height = 12)          
@@ -559,23 +560,23 @@ def DisplayForm():
 def UpdateForm():
     Upd = tk.Toplevel()
     Upd.geometry('500x400')
-    Upd.configure(bg = 'cornflower blue')
+    Upd.configure(bg = 'seagreen3')
     Upd.title('STUDENT MANAGEMENT SYSTEM')
     Upd.resizable(False, False)
 
     Upd.protocol("WM_DELETE_WINDOW", lambda: (Upd.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+    tk.Label(Upd, text = 'UPDATE RECORD', fg = 'black', bg = 'seagreen3', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
-    tk.Label(Upd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
+    tk.Label(Upd, text = 'Roll Number', fg = 'black',bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
     n = tk.StringVar()
     T1 = tk.Entry(Upd, fg = "black", bg = "white", textvariable = n, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
-    tk.Label(Upd, text = 'Column', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=180)
+    tk.Label(Upd, text = 'Column', fg = 'black',bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=80, y=180)
     col = tk.StringVar()
     T2 = ttk.Combobox(Upd, state = "readonly", textvariable = col, values = ['Name', 'Class', 'Section', 'Gender'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=193)
 
-    tk.Label(Upd, text = 'New Value', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
+    tk.Label(Upd, text = 'New Value', fg = 'black',bg = "seagreen3", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
     uv = tk.StringVar()
     T3 = tk.Entry(Upd, fg = "black", bg = "white", textvariable = uv, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=253)
 
@@ -622,13 +623,13 @@ def UpdateForm():
 def SearchForm():
     Ser = tk.Toplevel()
     Ser.geometry('700x500')
-    Ser.configure(bg = 'cornflower blue')
+    Ser.configure(bg = 'seagreen3')
     Ser.title('STUDENT MANAGEMENT SYSTEM')
     Ser.resizable(False, False)
 
     Ser.protocol("WM_DELETE_WINDOW", lambda: (Ser.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=180, y=20)
+    tk.Label(Ser, text = 'SEARCH RECORDS', fg = 'black', bg = 'seagreen3', font = ('bahnschrift bold', 30)).place(x=180, y=20)
 
     c = tk.StringVar()
     n = tk.StringVar()
@@ -723,13 +724,13 @@ def SearchForm():
 def ExamMenuForm():
     EMenu = tk.Toplevel()
     EMenu.geometry('500x600')
-    EMenu.configure(bg = 'cornflower blue')
+    EMenu.configure(bg = 'salmon')
     EMenu.title('STUDENT MANAGEMENT SYSTEM')
     EMenu.resizable(False,False)
 
     EMenu.protocol("WM_DELETE_WINDOW", lambda: (EMenu.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(EMenu, text = 'EXAM MENU', fg = 'black', bg = "cornflower blue", font = ('bahnschrift bold', 30)).place(x=135, y=50)
+    tk.Label(EMenu, text = 'EXAM MENU', fg = 'black', bg = "salmon", font = ('bahnschrift bold', 30)).place(x=135, y=50)
 
     def Subjects():
         EMenu.destroy()
@@ -771,13 +772,13 @@ def ExamMenuForm():
 def ExamSubjectsForm():
     ESub = tk.Toplevel()
     ESub.geometry('500x500')
-    ESub.configure(bg = 'cornflower blue')
+    ESub.configure(bg = 'salmon')
     ESub.title('STUDENT MANAGEMENT SYSTEM')
     ESub.resizable(False,False)
 
     ESub.protocol("WM_DELETE_WINDOW", lambda: (ESub.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(ESub, text = 'ASSIGN SUBJECTS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=90, y=20)      
+    tk.Label(ESub, text = 'ASSIGN SUBJECTS', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=90, y=20)      
 
     rn = tk.StringVar()  
     s1 = tk.StringVar()
@@ -786,22 +787,22 @@ def ExamSubjectsForm():
     s4 = tk.StringVar()
     s5 = tk.StringVar()
 
-    tk.Label(ESub, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=110)
+    tk.Label(ESub, text = 'Roll Number', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=110)
     T1 = tk.Entry(ESub, fg = "black", bg = "white", textvariable = rn, font = ('bahnschrift semibold', 9)).place(x=300, y=120)
     
-    tk.Label(ESub, text = 'Subject 1', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=153)
+    tk.Label(ESub, text = 'Subject 1', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=153)
     T2 = ttk.Combobox(ESub, state = "readonly", textvariable = s1, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=163)
     
-    tk.Label(ESub, text = 'Subject 2', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=196)
+    tk.Label(ESub, text = 'Subject 2', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=196)
     T3 = ttk.Combobox(ESub, state = "readonly", textvariable = s2, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=206)
     
-    tk.Label(ESub, text = 'Subject 3', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=239)
+    tk.Label(ESub, text = 'Subject 3', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=239)
     T4 = ttk.Combobox(ESub, state = "readonly", textvariable = s3, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=249)
     
-    tk.Label(ESub, text = 'Subject 4', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=282)
+    tk.Label(ESub, text = 'Subject 4', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=282)
     T5 = ttk.Combobox(ESub, state = "readonly", textvariable = s4, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=292)
     
-    tk.Label(ESub, text = 'Subject 5', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=325)
+    tk.Label(ESub, text = 'Subject 5', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=325)
     T6 = ttk.Combobox(ESub, state = "readonly", textvariable = s5, values = subjects, width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=335)
 
     def BACK():
@@ -868,13 +869,13 @@ def ExamSubjectsForm():
 def ExamMarksForm():
     EMarks = tk.Toplevel()
     EMarks.geometry('500x500')
-    EMarks.configure(bg = 'cornflower blue')
+    EMarks.configure(bg = 'salmon')
     EMarks.title('STUDENT MANAGEMENT SYSTEM')
     EMarks.resizable(False,False)
 
     EMarks.protocol("WM_DELETE_WINDOW", lambda: (EMarks.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(EMarks, text = 'INSERT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=110, y=20)      
+    tk.Label(EMarks, text = 'INSERT MARKS', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=110, y=20)      
 
     rn = tk.StringVar()  
     ex = tk.StringVar()
@@ -884,7 +885,7 @@ def ExamMarksForm():
     m4 = tk.StringVar()
     m5 = tk.StringVar()
 
-    tk.Label(EMarks, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=105)
+    tk.Label(EMarks, text = 'Roll Number', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=105)
     T1 = tk.Entry(EMarks, fg = "black", bg = 'white', textvariable = rn, font = ('bahnschrift semibold', 9), width = 10).place(x=300, y=115)
     
     #load subjects based on roll number
@@ -900,22 +901,22 @@ def ExamMarksForm():
                 sub3 = record[3]
                 sub4 = record[4]
                 sub5 = record[5]
-                tk.Label(EMarks, text = 'Exam Name', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=148)
+                tk.Label(EMarks, text = 'Exam Name', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=148)
                 T2 = ttk.Combobox(EMarks, state = "readonly", textvariable = ex, values = ["Half Yearly", "Final Exam"], width = 17, font = ('bahnschrift semibold', 9)).place(x=300,y=158)
     
-                tk.Label(EMarks, text = sub1, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=191)
+                tk.Label(EMarks, text = sub1, fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=191)
                 T3 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m1, font = ('bahnschrift semibold', 9)).place(x=300,y=201)
     
-                tk.Label(EMarks, text = sub2, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=234)
+                tk.Label(EMarks, text = sub2, fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=234)
                 T4 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m2, font = ('bahnschrift semibold', 9)).place(x=300,y=244)
     
-                tk.Label(EMarks, text = sub3, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=277)
+                tk.Label(EMarks, text = sub3, fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=277)
                 T5 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m3, font = ('bahnschrift semibold', 9)).place(x=300,y=287)
     
-                tk.Label(EMarks, text = sub4, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
+                tk.Label(EMarks, text = sub4, fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=320)
                 T6 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m4, font = ('bahnschrift semibold', 9)).place(x=300,y=330)
     
-                tk.Label(EMarks, text = sub5, fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=60,y=363)
+                tk.Label(EMarks, text = sub5, fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=60,y=363)
                 T7 = tk.Entry(EMarks, fg = "black", bg = "white", textvariable = m5, font = ('bahnschrift semibold', 9)).place(x=300,y=373)
             else:
                 messagebox.showinfo("Failed", "No subjects assigned for this student")
@@ -987,27 +988,27 @@ def ExamMarksForm():
 def ExamUpdateForm():
     EUpd = tk.Toplevel()
     EUpd.geometry('500x400')
-    EUpd.configure(bg = 'cornflower blue')
+    EUpd.configure(bg = 'salmon')
     EUpd.title('STUDENT MANAGEMENT SYSTEM')
     EUpd.resizable(False, False)
 
     EUpd.protocol("WM_DELETE_WINDOW", lambda: (EUpd.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(EUpd, text = 'UPDATE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+    tk.Label(EUpd, text = 'UPDATE MARKS', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=95, y=20)
 
-    tk.Label(EUpd, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
+    tk.Label(EUpd, text = 'Roll Number', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80, y=120)
     rn = tk.StringVar()
     T1 = tk.Entry(EUpd, fg = "black", bg = "white", textvariable = rn, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
-    tk.Label(EUpd, text = 'Exam Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=160)
+    tk.Label(EUpd, text = 'Exam Name', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80, y=160)
     ex = tk.StringVar()
     T2 = ttk.Combobox(EUpd, state = "readonly", textvariable = ex, values = ['Half Yearly', 'Final Exam'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=173)
     
-    tk.Label(EUpd, text = 'Subject', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=200)
+    tk.Label(EUpd, text = 'Subject', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80, y=200)
     sub = tk.StringVar()
     T2 = ttk.Combobox(EUpd, state = "readonly", textvariable = sub, values = subjects, width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=213)
 
-    tk.Label(EUpd, text = 'New Marks', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
+    tk.Label(EUpd, text = 'New Marks', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80, y=240)
     mk = tk.StringVar()
     T3 = tk.Entry(EUpd, fg = "black", bg = "white", textvariable = mk, width = 14, font = ('bahnschrift semibold', 9)).place(x=320, y=253)
 
@@ -1062,17 +1063,17 @@ def ExamUpdateForm():
 def ExamDeleteForm():
     EDel = tk.Toplevel()
     EDel.geometry('500x300')
-    EDel.configure(bg = 'cornflower blue')
+    EDel.configure(bg = 'salmon')
     EDel.title('STUDENT MANAGEMENT SYSTEM')
     EDel.resizable(False,False)
 
     EDel.protocol("WM_DELETE_WINDOW", lambda: (EDel.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(EDel, text = 'DELETE MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
-    tk.Label(EDel, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=95)
+    tk.Label(EDel, text = 'DELETE MARKS', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(EDel, text = 'Roll Number', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80,y=95)
     rn = tk.StringVar()
     T1 = tk.Entry(EDel, fg = "black", bg = "white", textvariable = rn, width = 13, font = ('bahnschrift semibold', 9)).place(x=320, y=108)
-    tk.Label(EDel, text = 'Exam Name', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=145)
+    tk.Label(EDel, text = 'Exam Name', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80,y=145)
     ex = tk.StringVar()
     T2 = ttk.Combobox(EDel, state = "readonly", textvariable = ex, values = ['Half Yearly', 'Final Exam'], width = 11, font = ('bahnschrift semibold', 9)).place(x=320, y=158)
 
@@ -1119,14 +1120,14 @@ def ExamDeleteForm():
 def ExamGraphForm():
     Grph = tk.Toplevel()
     Grph.geometry('500x300')
-    Grph.configure(bg = 'cornflower blue')
+    Grph.configure(bg = 'salmon')
     Grph.title('STUDENT MANAGEMENT SYSTEM')
     Grph.resizable(False,False)
 
     Grph.protocol("WM_DELETE_WINDOW", lambda: (Grph.destroy(), start.destroy(), myconn.close()))
 
-    tk.Label(Grph, text = 'PLOT GRAPH', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=100, y=20)
-    tk.Label(Grph, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    tk.Label(Grph, text = 'PLOT GRAPH', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=100, y=20)
+    tk.Label(Grph, text = 'Roll Number', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
     n = tk.StringVar()
     T = tk.Entry(Grph, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
 
@@ -1214,14 +1215,14 @@ def ExamGraphForm():
 def ExamPredictForm():
     Pred = tk.Toplevel()
     Pred.geometry('500x300')
-    Pred.configure(bg = 'cornflower blue')
+    Pred.configure(bg = 'salmon')
     Pred.title('STUDENT MANAGEMENT SYSTEM')
     Pred.resizable(False,False)
     
     Pred.protocol("WM_DELETE_WINDOW", lambda: (Pred.destroy(), start.destroy(), myconn.close()))
     
-    tk.Label(Pred, text = 'PREDICT MARKS', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 30)).place(x=95, y=20)
-    tk.Label(Pred, text = 'Roll Number', fg = 'black',bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
+    tk.Label(Pred, text = 'PREDICT MARKS', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 30)).place(x=95, y=20)
+    tk.Label(Pred, text = 'Roll Number', fg = 'black',bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=80,y=120)
     n = tk.StringVar()
     T = tk.Entry(Pred, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=320, y=133)
     
@@ -1327,16 +1328,16 @@ def ExamPredictForm():
 def ExamReportForm():
     Rep = tk.Toplevel()
     Rep.geometry('400x250')
-    Rep.configure(bg = 'cornflower blue')
+    Rep.configure(bg = 'salmon')
     Rep.title('STUDENT MANAGEMENT SYSTEM')
     Rep.resizable(False,False)
     
     Rep.protocol("WM_DELETE_WINDOW", lambda: (Rep.destroy(), start.destroy(), myconn.close()))
     
-    tk.Label(Rep, text = 'REPORT CARD', fg = 'black', bg = 'cornflower blue', font = ('bahnschrift bold', 25)).place(x=100, y=20)
-    tk.Label(Rep, text = 'Roll Number', fg = 'black', bg = "cornflower blue", font = ('bahnschrift semibold', 20)).place(x=40,y=100)
+    tk.Label(Rep, text = 'REPORT CARD', fg = 'black', bg = 'salmon', font = ('bahnschrift bold', 25)).place(x=100, y=20)
+    tk.Label(Rep, text = 'Roll Number', fg = 'black', bg = "salmon", font = ('bahnschrift semibold', 20)).place(x=50,y=100)
     n = tk.StringVar()
-    T = tk.Entry(Rep, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=220, y=113)
+    T = tk.Entry(Rep, fg = "black", bg = "white", textvariable = n, width = 10, font = ('bahnschrift semibold', 9)).place(x=270, y=113)
     
     def BACK():
         Rep.destroy()
